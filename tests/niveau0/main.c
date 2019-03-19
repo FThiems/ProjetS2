@@ -45,8 +45,8 @@ struct world_s{
     SDL_Surface* background;
     int gameover;
     SDL_Surface* sprite;
-    int pos_x;
-    int pos_y;
+    int pos_x;//Position x du sprite
+    int pos_y;//Position y du sprite
     
     };
 
