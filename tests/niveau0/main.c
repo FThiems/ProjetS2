@@ -34,7 +34,11 @@
 
 #define MOVING_STEP 5
 
+/**
+ * \brief Vitesse du vent
+ */
 
+#define WIND_VX 3
 
 
 /**
@@ -47,7 +51,9 @@ struct world_s{
     SDL_Surface* sprite;
     int pos_x;//Position x du sprite
     int pos_y;//Position y du sprite
-    
+    int posb_x;
+    int posb_y;
+    SDL_Surface* bubbles;
     };
 
 typedef struct world_s world_t;
@@ -64,6 +70,7 @@ void init_data(world_t * world){
     world->background = load_image( "ressources/background.bmp" );
     world->gameover = 0;
     world->sprite = load_image( "ressources/sprite.bmp" );
+    world->bubbles = load_image( "ressources/bub_blue.bmp" );
     
 }
 
@@ -77,7 +84,7 @@ void init_data(world_t * world){
 void clean_data(world_t *world){
     SDL_FreeSurface(world->background);
     SDL_FreeSurface(world->sprite);
-    
+    SDL_FreeSurface(world->bubbles);
 }
 
 
@@ -100,6 +107,9 @@ int is_game_over(world_t *world){
  */
 
 void update_data(world_t *world){
+  if(world->posb_x < world->posb_x + WIND_VX){
+    world->posb_x += WIND_VX;
+  }
 }
 
 
@@ -111,8 +121,11 @@ void update_data(world_t *world){
 
 void  init_graphics(SDL_Surface *screen, world_t *world){
     set_transparence(screen, world->sprite, 255, 0, 255);
+    set_transparence(screen, world->bubbles, 255, 0, 255);
     world->pos_x = SCREEN_WIDTH/2 - SPRITE_SIZE/2;
     world->pos_y = SCREEN_HEIGHT/2 - SPRITE_SIZE/2;
+    world->posb_x = 150;
+    world->posb_y = 100;
 }
 
 
@@ -141,8 +154,7 @@ void apply_background(SDL_Surface *bg, SDL_Surface *screen){
 void refresh_graphics(SDL_Surface *screen, world_t *world){
     apply_background(world->background,screen);
     apply_surface(world->sprite, screen, world->pos_x, world->pos_y);
-    
-    
+    apply_sub_surface(world->bubbles, screen, 0, 0, BUB_SIZE, BUB_SIZE, world->posb_x, world->posb_y);
     
     refresh_surface(screen);
 }
@@ -158,6 +170,7 @@ void refresh_graphics(SDL_Surface *screen, world_t *world){
 
 void handle_events(SDL_Event *event,world_t *world){
     Uint8 *keystates;
+    int mouseX, mouseY;
     while( SDL_PollEvent( event ) ) {
         //Si l'utilisateur a cliqué sur le X de la fenêtre
         if( event->type == SDL_QUIT ) {
@@ -167,23 +180,30 @@ void handle_events(SDL_Event *event,world_t *world){
         
         /* gestion des evenements clavier */
         keystates = SDL_GetKeyState( NULL );
-        /* Si l'utilisateur appuie sur
-         la touche h (constante SDLK_h) */
+        /* Fleche du haut */
         if( keystates[ SDLK_UP ] ) {
             world->pos_y -= MOVING_STEP;
         }
+        /* Fleche du bas */
         if( keystates[ SDLK_DOWN ] ) {
             world->pos_y += MOVING_STEP;
         }
+        /* Fleche du droite */
         if( keystates[ SDLK_RIGHT ] ) {
             world->pos_x += MOVING_STEP;
         }
+        /* Fleche de gauche */
         if( keystates[ SDLK_LEFT ] ) {
             world->pos_x -= MOVING_STEP;
         }
         
-        
-        
+        /* gestion de l'événement souris:
+	   bouton de la souris relaché après un clic */
+	if(event->type == SDL_MOUSEBUTTONUP){//on recupère les coordonnées de le souris
+	  SDL_GetMouseState(&mouseX, &mouseY);
+	  world->posb_x = mouseX;
+	  world->posb_y = mouseY;
+	}
     }
     
 }
