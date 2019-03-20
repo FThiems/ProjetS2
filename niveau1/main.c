@@ -1,25 +1,22 @@
 /**
- * \file main.c
- * \brief Programme principal du niveau 0, à compléter
- * \author Mathieu Constant
- * \version 0.1
- * \date 13 mars 2019
+ * \file main.c 
+ * \brief Billard
  */
 
 #include "sdl-light.h"
 
 /**
- * \brief Largeur de l'écran de jeu
+ *  \brief Largeur de l'écran de jeu 
  */
 #define SCREEN_WIDTH 1288
 
 /**
- * \brief Hauteur de l'écran de jeu
+ *\brief Hauteur de l'écran de jeu 
  */
 #define SCREEN_HEIGHT 725
 
 /**
- * \brief Taille d'une boule
+ *\brief Taille d'une boule 
  */
 #define BALL_SIZE 42
 
@@ -31,9 +28,9 @@
 /**
  * \brief Représentation du monde du jeu
  */
-
 struct world_s{
     int gameover;
+    SDL_Surface* table;
     
     };
 
@@ -45,23 +42,19 @@ typedef struct world_s world_t;
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */
-
-
 void init_data(world_t * world){
-
     world->gameover = 0;
-    
+    world->table = load_image("ressources/table.bmp");
 }
+
 
 
 /**
  * \brief La fonction nettoie les données du monde
  * \param world les données du monde
  */
-
-
 void clean_data(world_t *world){
-    
+    SDL_FreeSurface(world->table);
 }
 
 
@@ -72,7 +65,6 @@ void clean_data(world_t *world){
  * \param world les données du monde
  * \return 1 si le jeu est fini, 0 sinon
  */
-
 int is_game_over(world_t *world){
     return world->gameover;
 }
@@ -82,7 +74,6 @@ int is_game_over(world_t *world){
  * \brief La fonction met à jour les données en tenant compte de la physique du monde
  * \param les données du monde
  */
-
 void update_data(world_t *world){
 }
 
@@ -92,15 +83,9 @@ void update_data(world_t *world){
  * \param screen la surface correspondant à l'écran de jeu
  * \param world les données du monde
  */
-
 void  init_graphics(SDL_Surface *screen, world_t *world){
     
 }
-
-
-
-
-
 
 
 
@@ -111,9 +96,7 @@ void  init_graphics(SDL_Surface *screen, world_t *world){
  */
 
 void refresh_graphics(SDL_Surface *screen, world_t *world){
-    
-
-    
+    apply_surface(world->table,screen,0,0);
     
     refresh_surface(screen);
 }
