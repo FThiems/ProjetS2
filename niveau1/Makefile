@@ -1,5 +1,5 @@
-SRC=main.c sdl-light.c
-HEADERS=sdl-light.h
+SRC=main.c library/sdl-light.c 
+HEADERS=library/sdl-light.h library/definitions.h
 BIN=niveau1
 LIBS=-L/usr/lib/x86_64-linux-gnu -lsndfile -lm
 
