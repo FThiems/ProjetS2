@@ -36,12 +36,12 @@
 /**
  *  \brief Borders
  */
-#define BORDER_RIGHT (SCREEN_WIDTH-BALL_SIZE/2-BORDER_SIZE)
-#define BORDER_LEFT (BORDER_SIZE+BALL_SIZE/2)
-#define BORDER_DOWN (SCREEN_HEIGHT-BALL_SIZE/2-BORDER_SIZE)
-#define BORDER_UP (BORDER_SIZE+BALL_SIZE/2)
+#define BORDER_RIGHT (1202-BALL_SIZE/2)
+#define BORDER_LEFT (85+BALL_SIZE/2)
+#define BORDER_DOWN (640-BALL_SIZE/2)
+#define BORDER_UP (85+BALL_SIZE/2)
 /**
- * * \brief Number of balls
+ * \brief Number of balls
  */
 #define NB_BALLS 16
  /**
@@ -50,6 +50,7 @@
 struct ball_s{
     double x,y;
     double vx,vy;
+    double vRemainingX,vRemainingY;
     };
 
 typedef struct ball_s ball_t;

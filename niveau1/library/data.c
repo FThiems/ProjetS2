@@ -8,6 +8,11 @@
  */
 #include "definitions.h"
 
+/**
+ * \brief Fonctions liées aux balles
+ */
+#include "ball_functions.c"
+
 /**** SIGNATURES ****/
 
 /**
@@ -30,23 +35,23 @@ void update_data(world_t* world);
 
 /**** FONCTIONS ****/
 
+//! Places the collored balls at the right spot
 void init_balls(world_t* world){
   int col = 1, row, nb = 1;
   //Set position of first ball
-  set_x(775, nb, world);
-  set_y(357, nb, world);
-  nb++;
-  while(nb <= NB_BALLS){
+  *get_px(nb,world) = 775;
+  *get_py(nb,world) = 357;
+  nb++; //A ball has been placed
+  while(nb < NB_BALLS){
     row = 0;
-    while(nb <= NB_BALLS && row < col){
-      set_x( get_x(1, world) + BALL_SIZE * col, nb, world );
-      set_y( get_y(1, world) - BALL_SIZE / 2 * col + BALL_SIZE * row, nb, world );
-      nb++; 
+    while(nb < NB_BALLS && row < col+1){
+      *get_px(nb, world) = *get_px(1,world) + BALL_SIZE * col;
+      *get_py(nb, world) = *get_py(1, world) - BALL_SIZE / 2 * col + BALL_SIZE * row;
+      nb++;
       row++;
     }
     col++;
   }
-  
 }
 
 void init_data(world_t* world){
@@ -63,12 +68,12 @@ void init_data(world_t* world){
       world->balls[i] = calloc(NB_BALLS,sizeof(ball_t**));
     }
     
-    //Sets the default postions of balls
-    set_x(385,0,world);
-    set_y(364,0,world);
-
-    world->balls[0]->vx = 10.;
-    world->balls[0]->vy = 20.0;
+    //Sets the default positions of balls
+    *get_px(0,world) = 385;
+    *get_py(0,world) = 364;
+    
+    //Places the collored balls at the right spot
+    init_balls(world);
 }
 
 
@@ -84,33 +89,89 @@ void clean_data(world_t* world){
 }
 
 
-//void move_ball(int vx,int vy, ,world_t* world)
 
 void update_data(world_t* world){
-    //Moves balls[0] by it's vectors
-    world->balls[0]->x +=  world->balls[0]->vx;
-    world->balls[0]->y += world->balls[0]->vy;
+    double *px, *py, *pvx, *pvy, *prvx, *prvy;
+    double highest_speed = 0, temp;
     
-    
-    
-    //Bounces off walls  //TODO Add half-vector managments for bounces (cut vector) #####################################
-        //Right side
-        if (world->balls[0]->x > BORDER_RIGHT)
-            world->balls[0]->vx = -1 * fabs(world->balls[0]->vx);
-        //Left side
-        if (world->balls[0]->x < BORDER_LEFT)
-            world->balls[0]->vx = fabs(world->balls[0]->vx);
-
+    int ball_number,remaining_baby_steps,total_baby_steps;
+    //Sets all the balls' Remaining vx and vy to their vx and vy values
+    for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
+        *get_p_Remaining_vx(ball_number,world) = *get_pvx(ball_number,world);
+        *get_p_Remaining_vy(ball_number,world) = *get_pvy(ball_number,world);
         
-        //Lower side
-        if (world->balls[0]->y > BORDER_DOWN)
-            world->balls[0]->vy = -1 * fabs(world->balls[0]->vy);
-        //Upper side
-        if (world->balls[0]->y < BORDER_UP)
-            world->balls[0]->vy = fabs(world->balls[0]->vy);
+        temp = sqrt( *get_pvx(ball_number,world) * *get_pvx(ball_number,world) + *get_pvy(ball_number,world) * *get_pvy(ball_number,world) );
+        if (temp > highest_speed)
+            highest_speed = temp;
+    }
+    
+    //Every needs to be the same for a ball, and smaller than (BALL_SIZE/2) (radius)
+    total_baby_steps = (int) highest_speed / (BALL_SIZE/2) +1;
+    remaining_baby_steps = total_baby_steps;
+    
+    //Small movements loop
+    while (remaining_baby_steps !=0){
+        remaining_baby_steps--;
+        
+        for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
+            //Get current ball's pointers
+            px = get_px(ball_number,world);
+            py = get_py(ball_number,world);
+            prvx = get_prvx(ball_number,world);
+            prvy = get_prvy(ball_number,world);
+            
+            //Moves balls[ball_number] by it's vectors
+            *px+=*prvx / total_baby_steps;
+            *py+=*prvy / total_baby_steps;
+            
+            //Removes moved distance
+            *prvx -= *prvx / total_baby_steps;
+            *prvy -= *prvy / total_baby_steps;
+        
+            
+            //Bounces off walls  //TODO Add half-vector managments for bounces (cut vector) #####################################
+                //Right side
+                if (*px > BORDER_RIGHT)
+                    *pvx = -1 * fabs(*pvx);
+                //Left side
+                if (*px < BORDER_LEFT)
+                    *pvx = fabs(*pvx);
+
+                
+                //Lower side
+                if (*py > BORDER_DOWN)
+                    *pvy = -1 * fabs(*pvy);
+                //Upper side
+                if (world->balls[0]->y < BORDER_UP)
+                    world->balls[0]->vy = fabs(world->balls[0]->vy);
+                } //FIXME
+        
+    }
+
+    
+
     
     //Slows down
     world->balls[0]->vx *= 0.95;
     world->balls[0]->vy *= 0.95;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

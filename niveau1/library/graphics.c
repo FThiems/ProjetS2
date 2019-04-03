@@ -7,6 +7,10 @@
  * \brief Definitions des constantes, des structures et des includes
  */
 #include "definitions.h"
+/**
+ * \brief Fonctions liées aux balles
+ */
+#include "ball_functions.c"
 
 /**** SIGNATURES ****/
 
@@ -32,6 +36,43 @@ void  init_graphics(SDL_Surface* screen, world_t* world){
 
 void refresh_graphics(SDL_Surface* screen, world_t* world){
     apply_surface(world->table,screen,0,0);
-    apply_sub_surface(world->balls_sprite,screen,0,0,BALL_SIZE,BALL_SIZE,world->balls[0]->x-BALL_SIZE/2,world->balls[0]->y-BALL_SIZE/2);
+    
+    int ball_number,on_screen_x,on_screen_y;
+    for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
+        on_screen_x = *get_px(ball_number,world)-BALL_SIZE/2;
+        on_screen_y = *get_py(ball_number,world)-BALL_SIZE/2;
+        apply_sub_surface(world->balls_sprite,screen,ball_number*BALL_SIZE,0,BALL_SIZE,BALL_SIZE, on_screen_x, on_screen_y);
+    }
     refresh_surface(screen);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

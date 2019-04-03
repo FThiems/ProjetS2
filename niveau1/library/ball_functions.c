@@ -1,12 +1,35 @@
-void set_x(double x,int ball_number,world_t* world){
-  world->balls[ball_number]->x = x;
+/**
+ * \file data.c
+ * \brief Fonctions liées aux balles
+ */
+
+#ifndef BF_VVVV
+#define BF_VVVV
+
+// Positions
+double* get_px(int ball_number,world_t* world){
+    return &(world->balls[ball_number]->x);
 }
-void set_y(double y,int ball_number,world_t* world){
-  world->balls[ball_number]->y = y;
+double* get_py(int ball_number,world_t* world){
+    return &(world->balls[ball_number]->y);
 }
-double get_x(int ball_number,world_t* world){
-  return world->balls[ball_number]->x;
+
+
+//Speeds
+double* get_pvx(int ball_number,world_t* world){
+    return &(world->balls[ball_number]->vx);
 }
-double get_y(int ball_number,world_t* world){
-  return world->balls[ball_number]->y;
+double* get_pvy(int ball_number,world_t* world){
+    return &(world->balls[ball_number]->vy);
 }
+
+//Remaining Speeds
+double* get_p_Remaining_vx(int ball_number,world_t* world){
+    return &(world->balls[ball_number]->vRemainingX);
+}
+double* get_p_Remaining_vy(int ball_number,world_t* world){
+    return &(world->balls[ball_number]->vRemainingY);
+}
+
+
+#endif
