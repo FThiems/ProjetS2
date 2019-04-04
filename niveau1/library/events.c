@@ -34,6 +34,8 @@ void handle_events(SDL_Event* event,world_t* world){
             world->balls[0]->vy = (mouseY - world->balls[0]->y) *SPEED_COEF;
         }
         
+//         if( event->type == SDL_KEY_UP )
+//             printf("\n");
     }
     
 }
