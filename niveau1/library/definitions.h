@@ -48,9 +48,9 @@
  * \brief Ball info
  */
 struct ball_s{
-    double x,y;
-    double vx,vy;
-    double vRemainingX,vRemainingY;
+    double x,y; /*!< Coordonnées du centre de la balle */
+    double vx,vy; /*!< Vecteurs vitesse sur x et y */
+    double vRemainingX,vRemainingY; /*!< Vecteurs vitesse restants à parcourir durant le rafraîchissment */
     };
 
 typedef struct ball_s ball_t;
@@ -60,10 +60,10 @@ typedef struct ball_s ball_t;
  * \brief Représentation du monde du jeu
  */
 struct world_s{
-    int gameover;
-    SDL_Surface* table;
-    SDL_Surface* balls_sprite;
-    ball_t** balls;
+    int gameover; /*!< Variable de fin de jeu */
+    SDL_Surface* table; /*!< Surface SDL de la table de billard */
+    SDL_Surface* balls_sprite; /*!< Surface SDL des boules de billard */
+    ball_t** balls; /*!< Tableau de pointeurs sur les boules de billard */
     
     };
 

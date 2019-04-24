@@ -82,10 +82,10 @@ void clean_data(world_t* world){
     int i;
     SDL_FreeSurface(world->table);
     SDL_FreeSurface(world->balls_sprite);
-    for(i = 0; i< NB_BALLS; i++){
+    /*for(i = 0; i< NB_BALLS; i++){
       free(world->balls[i]);
     }
-    free(world->balls);
+    free(world->balls);*/
 }
 
 
@@ -112,8 +112,9 @@ void update_data(world_t* world){
     }
     
     //Every step needs to be the same for a ball, and smaller than (BALL_SIZE/2) (radius)
-    total_baby_steps = (int) highest_speed / (BALL_SIZE/2) +1;
+    total_baby_steps = (int) highest_speed % (BALL_SIZE/2) +1;
     remaining_baby_steps = total_baby_steps;
+    printf("%i\n",total_baby_steps);
     
     //Small movements loop
     while (remaining_baby_steps !=0){
@@ -184,14 +185,14 @@ void update_data(world_t* world){
                         //Check collision
                         if (distance_xy < BALL_SIZE){
                             //Retreat to not overlap
-                            overlapped_x = distance_x / distance_xy;
-                            overlapped_y = distance_y / distance_xy;
+                            overlapped_x = distance_x / distance_xy * BALL_SIZE;
+                            overlapped_y = distance_y / distance_xy * BALL_SIZE;
                             
-                            *px -= overlapped_x;
-                            *prvx += overlapped_x;
+                            *px = *pwx - overlapped_x;
+//                             *prvx += overlapped_x;
                             
-                            *py -= overlapped_y;
-                            *prvy += overlapped_y;
+                            *py = *pwy - overlapped_y;
+//                             *prvy += overlapped_y;
                             
                             //if colliding with moving ball //TODO
                             if (*pwvx || *pwvy){
@@ -200,13 +201,13 @@ void update_data(world_t* world){
                             else { //if still
                                 //TODO make copy!! best code ever!!
                                 //btw, there is a colision from the top right corner
-                                *pwrvx = *prvx/2;
-                                *pwvx = *pwrvx;
-                                *pwrvy = *prvy/2;
-                                *pwvy = *pwrvy;
-                                
-                                *pvx = -1 * *pwrvx ;
-                                *pvy = *pwrvy *-1;
+//                                 *pwrvx = *prvx/2;
+//                                 *pwvx = *pwrvx;
+//                                 *pwrvy = *prvy/2;
+//                                 *pwvy = *pwrvy;
+//                                 
+//                                 *pvx = -1 * *pwrvx ;
+//                                 *pvy = *pwrvy *-1;
                                 
                                 
                             }
