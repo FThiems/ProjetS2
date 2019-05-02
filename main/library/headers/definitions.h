@@ -69,8 +69,4 @@ struct world_s{
 
 typedef struct world_s world_t;
 
-//Ligne de test
-
-printf("coucou\n");
-
 #endif

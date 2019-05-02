@@ -12,6 +12,8 @@ void set_transparence(SDL_Surface *screen, SDL_Surface *surf, int r, int g, int 
 
 void refresh_surface(SDL_Surface *screen);
 
+//Ligne de test
 
+printf("coucou\n");
 
 #endif
