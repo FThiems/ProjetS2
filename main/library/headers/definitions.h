@@ -21,7 +21,7 @@
  */
 #define SCREEN_HEIGHT 725
 
-/**
+/** 
  *\brief Taille d'une boule 
  */
 #define BALL_SIZE 42
@@ -68,5 +68,9 @@ struct world_s{
     };
 
 typedef struct world_s world_t;
+
+//Ligne de test
+
+printf("coucou\n");
 
 #endif
