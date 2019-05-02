@@ -1,6 +1,6 @@
 /**
  * \file data.c
- * \brief Fonctions liées aux balles
+ * \brief Signatures des fonctions liées aux balles
  */
 
 /**

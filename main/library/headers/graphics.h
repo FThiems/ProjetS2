@@ -1,6 +1,6 @@
 /**
  * \file graphics.c
- * \brief Fonctions liées aux éléments graphiques du jeu
+ * \brief Signatures des fonctions liées aux éléments graphiques du jeu
  */
 
 /**

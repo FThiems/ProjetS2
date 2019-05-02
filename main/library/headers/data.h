@@ -1,6 +1,6 @@
 /**
  * \file data.c
- * \brief Fonctions liées aux données du monde
+ * \brief Signatures des fonctions liées aux données du monde
  */
 
 #ifndef DATA
