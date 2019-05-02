@@ -1,0 +1,2 @@
+Erreur : fichier SDL.h non trouvé
+Dans le fichier library/headers/sdl-light.h rentrez le chemin absolu du fichier SDL.h.

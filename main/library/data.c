@@ -13,11 +13,6 @@
  */
 #include "headers/ball_functions.h"
 
-/**
- *\brief Signatures des fonctions de data.c
- */
-#include "headers/data.h"
-
 /**** FONCTIONS ****/
 
 //! Places the collored balls at the right spot

@@ -1,7 +1,7 @@
 #ifndef __SDL_LIGHT_H__
 #define __SDL_LIGHT_H__
 
-#include <SDL.h>
+#include "../../../../../../../usr/include/SDL/SDL.h"
 
 SDL_Surface* load_image(char path[]);
 void apply_surface(SDL_Surface* surface, SDL_Surface *screen, int x, int y);
