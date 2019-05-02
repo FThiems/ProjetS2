@@ -9,7 +9,7 @@
 #include "library/headers/definitions.h"
 
 /**
- * \brief Fonctions liées aux données du monde
+ *\brief Signatures des fonctions de data.c
  */
 #include "library/headers/data.h"
 
