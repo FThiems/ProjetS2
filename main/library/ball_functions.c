@@ -3,6 +3,8 @@
  * \brief Fonctions liées aux balles
  */
 
+#include"headers/definitions.h"
+
 #ifndef BF_VVVV
 #define BF_VVVV
 

@@ -1,27 +1,27 @@
 /**
- * \file main.c 
+ * \file main.c
  * \brief Billard
  */
 
 /**
  * \brief Definitions des constantes, des structures et des includes
  */
-#include "library/definitions.h"
+#include "library/headers/definitions.h"
 
 /**
  * \brief Fonctions liées aux données du monde
  */
-#include "library/data.c"
+#include "library/headers/data.h"
 
 /**
  * \brief Fonctions liées aux éléments graphiques du jeu
  */
-#include "library/graphics.c"
+#include "library/headers/graphics.h"
 
 /**
  * \brief Fonctions liées aux éléments graphiques du jeu
  */
-#include "library/events.c"
+#include "library/headers/events.h"
 
 /**
  * \brief La fonction indique si le jeu est fini en fonction des données du monde
@@ -46,17 +46,17 @@ int main( int argc, char* args[] )
     screen = init_sdl(SCREEN_WIDTH, SCREEN_HEIGHT);
     init_data(&world);
     init_graphics(screen,&world);
-    
+
     while(!is_game_over(&world)){
         handle_events(&event,&world);
         update_data(&world);
         refresh_graphics(screen,&world);
         SDL_Delay(10);
     }
-    
+
     clean_data(&world);
     quit_sdl();
-    
-    
+
+
     return 0;
 }

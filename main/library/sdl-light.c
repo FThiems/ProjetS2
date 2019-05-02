@@ -6,7 +6,7 @@
  * \date 13 mars 2019
  */
 
-#include "sdl-light.h"
+#include "headers/sdl-light.h"
 
 
 
@@ -22,17 +22,17 @@
 
 SDL_Surface* init_sdl(int width, int height){
     SDL_Surface* screen = NULL;
-    
+
     SDL_Init( SDL_INIT_VIDEO );
-    
+
     //Set up screen
     screen = SDL_SetVideoMode( width, height, 16, SDL_SWSURFACE| SDL_DOUBLEBUF | SDL_ANYFORMAT );
-    
+
     return screen;
 }
 
 
-/** 
+/**
  * \brief La fonction permet de quitter la SDL
  * en supprimant notamment la surface correspondant à l'écran de jeu
  */
@@ -53,10 +53,10 @@ void quit_sdl(){
 
 SDL_Surface* load_image(char path[]){
     SDL_Surface* loadedImage = NULL;
-    
+
     SDL_Surface* optimizedImage = NULL;
     loadedImage = SDL_LoadBMP( path);
-    
+
     if( loadedImage != NULL ) {
         optimizedImage = SDL_DisplayFormat( loadedImage );
         SDL_FreeSurface( loadedImage );
@@ -65,7 +65,7 @@ SDL_Surface* load_image(char path[]){
         fprintf(stderr,"Image %s cannot be loaded!\n",path);
     }
     return optimizedImage;
-    
+
 }
 
 
@@ -82,10 +82,10 @@ void apply_surface(SDL_Surface* surf, SDL_Surface *screen, int x, int y){
     SDL_Rect pos;
     pos.x = x;
     pos.y = y;
-    
-    
+
+
     SDL_BlitSurface( surf, NULL, screen, &pos );
-    
+
 }
 
 
@@ -103,19 +103,19 @@ void apply_surface(SDL_Surface* surf, SDL_Surface *screen, int x, int y){
 
 
 void apply_sub_surface(SDL_Surface* surf, SDL_Surface *screen, int subposx, int subposy, int subwidth, int subheight, int posx, int posy){
-    
+
     //Apply image to screen
     SDL_Rect pos;
     pos.x = posx;
     pos.y = posy;
-    
+
     SDL_Rect internal;
     internal.x = subposx;
     internal.y = subposy;
     internal.w = subwidth;
     internal.h = subheight;
-    
-    
+
+
     SDL_BlitSurface( surf, &internal, screen, &pos );
 }
 
@@ -142,11 +142,3 @@ void refresh_surface(SDL_Surface *surf){
 void  set_transparence(SDL_Surface *screen, SDL_Surface *surf, int r, int g, int b){
     SDL_SetColorKey(surf, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, r, g, b)) ;
 }
-
-
-
-
-
-
-
-

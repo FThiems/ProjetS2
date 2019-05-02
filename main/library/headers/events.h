@@ -1,6 +1,6 @@
 /**
  * \file events.c
- * \brief Fonctions liées à la gestion des evenements 
+ * \brief Signatures des fonctions liées à la gestion des evenements 
  */
 
 /**

@@ -6,11 +6,11 @@
 /**
  * \brief Definitions des constantes, des structures et des includes
  */
-#include "definitions.h"
+#include "headers/definitions.h"
 /**
  * \brief Fonctions liées aux balles
  */
-#include "ball_functions.c"
+#include "headers/ball_functions.h"
 
 /**** SIGNATURES ****/
 
@@ -36,7 +36,7 @@ void  init_graphics(SDL_Surface* screen, world_t* world){
 
 void refresh_graphics(SDL_Surface* screen, world_t* world){
     apply_surface(world->table,screen,0,0);
-    
+
     int ball_number,on_screen_x,on_screen_y;
     for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
         on_screen_x = *get_px(ball_number,world)-BALL_SIZE/2;
@@ -45,34 +45,3 @@ void refresh_graphics(SDL_Surface* screen, world_t* world){
     }
     refresh_surface(screen);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

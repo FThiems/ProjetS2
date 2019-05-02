@@ -3,17 +3,20 @@
  * \brief Fonctions liées aux données du monde
  */
 
+#ifndef DATA
+#define DATA
 /**
  * \brief Definitions des constantes, des structures et des includes
  */
 #include "definitions.h"
 
-/**
- * \brief Fonctions liées aux balles
- */
-#include "ball_functions.h"
-
 /**** SIGNATURES ****/
+
+/**
+ * \brief Fonction qui initalise la position des boules sur le billard
+ * \param world les données du monde
+ */
+void init_balls(world_t* world);
 
 /**
  * \brief La fonction initialise les données du monde du jeu
@@ -33,3 +36,4 @@ void clean_data(world_t* world);
  */
 void update_data(world_t* world);
 
+#endif

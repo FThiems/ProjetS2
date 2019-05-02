@@ -10,7 +10,7 @@
 /**
  * \brief Fonctions liées aux balles
  */
-#include "ball_functions.c"
+#include "ball_functions.h"
 
 /**** SIGNATURES ****/
 
@@ -27,4 +27,3 @@ void  init_graphics(SDL_Surface* screen, world_t* world);
  * \param world les données du monde
  */
 void refresh_graphics(SDL_Surface* screen, world_t* world);
-

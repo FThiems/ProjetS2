@@ -6,32 +6,17 @@
 /**
  * \brief Definitions des constantes, des structures et des includes
  */
-#include "definitions.h"
+#include "headers/definitions.h"
 
 /**
- * \brief Fonctions liées aux balles
+ * \brief Signatures des fonctions liées aux balles
  */
-#include "ball_functions.c"
-
-/**** SIGNATURES ****/
+#include "headers/ball_functions.h"
 
 /**
- * \brief La fonction initialise les données du monde du jeu
- * \param world les données du monde
+ *\brief Signatures des fonctions de data.c
  */
-void init_data(world_t* world);
-
-/**
- * \brief La fonction nettoie les données du monde
- * \param world les données du monde
- */
-void clean_data(world_t* world);
-
-/**
- * \brief La fonction met à jour les données en tenant compte de la physique du monde
- * \param world les données du monde
- */
-void update_data(world_t* world);
+#include "headers/data.h"
 
 /**** FONCTIONS ****/
 
@@ -57,21 +42,21 @@ void init_balls(world_t* world){
 void init_data(world_t* world){
     world->gameover = 0;
     int i;
-    
+
     //Loads sprite images, they need to be freed within clean_data
     world->table = load_image("ressources/table.bmp");
     world->balls_sprite = load_image("ressources/boules.bmp");
-    
+
     //Allocates memory to world->²balls[0]
     world->balls = calloc(NB_BALLS,sizeof(ball_t*));
     for(i = 0; i<NB_BALLS; i++){
       world->balls[i] = calloc(NB_BALLS,sizeof(ball_t**));
     }
-    
+
     //Sets the default positions of balls
     *get_px(0,world) = 385;
     *get_py(0,world) = 364;
-    
+
     //Places the collored balls at the right spot
     init_balls(world);
 }
@@ -79,9 +64,9 @@ void init_data(world_t* world){
 
 
 void clean_data(world_t* world){
-    int i;
-    SDL_FreeSurface(world->table);
-    SDL_FreeSurface(world->balls_sprite);
+    //int i;
+    //SDL_FreeSurface(world->table);
+    //SDL_FreeSurface(world->balls_sprite);
     /*for(i = 0; i< NB_BALLS; i++){
       free(world->balls[i]);
     }
@@ -96,30 +81,30 @@ void update_data(world_t* world){
     double distance_x, distance_y, distance_xy;
     double overlapped_x, overlapped_y;
     double highest_speed = 0, calculated_speed;
-    
+
     int ball_number, watched_ball_number;
-    
+
     int remaining_baby_steps,total_baby_steps;
-    
+
     //Sets all the balls' Remaining vx and vy to their vx and vy values
     for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
         *get_p_Remaining_vx(ball_number,world) = *get_pvx(ball_number,world);
         *get_p_Remaining_vy(ball_number,world) = *get_pvy(ball_number,world);
-        
+
         calculated_speed = sqrt( *get_pvx(ball_number,world) * *get_pvx(ball_number,world) + *get_pvy(ball_number,world) * *get_pvy(ball_number,world) );
         if (calculated_speed > highest_speed)
             highest_speed = calculated_speed;
     }
-    
+
     //Every step needs to be the same for a ball, and smaller than (BALL_SIZE/2) (radius)
     total_baby_steps = (int) highest_speed % (BALL_SIZE/2) +1;
     remaining_baby_steps = total_baby_steps;
     printf("%i\n",total_baby_steps);
-    
+
     //Small movements loop
     while (remaining_baby_steps !=0){
         remaining_baby_steps--;
-        
+
         //For each ball
         for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
             //Get current ball's pointers
@@ -129,19 +114,19 @@ void update_data(world_t* world){
             pvy = get_pvy(ball_number,world);
             prvx = get_p_Remaining_vx(ball_number,world);
             prvy = get_p_Remaining_vy(ball_number,world);
-            
+
             // if is moving
             if (*prvx || *prvy){
-            
+
                 //Moves balls[ball_number] by it's vectors
                 *px += *prvx / total_baby_steps;
                 *py += *prvy / total_baby_steps;
-                
+
                 //Removes moved distance
                 *prvx -= *prvx / total_baby_steps;
                 *prvy -= *prvy / total_baby_steps;
-                
-                
+
+
                 //Bounce off walls
                     //Right side
                     if (*px > BORDER_RIGHT){
@@ -153,7 +138,7 @@ void update_data(world_t* world){
                         *pvx = fabs(*pvx);
                         *prvx = fabs(*prvx);
                     }
-                    
+
                     //Lower side
                     if (*py > BORDER_DOWN){
                         *pvy = -1 * fabs(*pvy);
@@ -164,10 +149,10 @@ void update_data(world_t* world){
                         *pvy = fabs(*pvy);
                         *prvy = fabs(*prvy);
                     }
-                    
-                    
+
+
                 //Bounce off other balls
-                
+
                     for (watched_ball_number = ball_number+1; watched_ball_number < NB_BALLS; watched_ball_number++){
                         //Get current ball's pointers
                         pwx = get_px(watched_ball_number,world);
@@ -176,81 +161,53 @@ void update_data(world_t* world){
                         pwvy = get_pvy(watched_ball_number,world);
                         pwrvx = get_p_Remaining_vx(watched_ball_number,world);
                         pwrvy = get_p_Remaining_vy(watched_ball_number,world);
-                        
+
                         //Distances between ball and watched ball
                         distance_x = *px - *pwx;
                         distance_y = *py - *pwy;
                         distance_xy = sqrt(distance_x * distance_x + distance_y * distance_y);
-                        
+
                         //Check collision
                         if (distance_xy < BALL_SIZE){
                             //Retreat to not overlap
                             overlapped_x = distance_x / distance_xy * BALL_SIZE;
                             overlapped_y = distance_y / distance_xy * BALL_SIZE;
-                            
+
                             *px = *pwx - overlapped_x;
 //                             *prvx += overlapped_x;
-                            
+
                             *py = *pwy - overlapped_y;
 //                             *prvy += overlapped_y;
-                            
+
                             //if colliding with moving ball //TODO
                             if (*pwvx || *pwvy){
-                                
+
                             }
                             else { //if still
                                 //TODO make copy!! best code ever!!
                                 //btw, there is a colision from the top right corner
-//                                 *pwrvx = *prvx/2;
-//                                 *pwvx = *pwrvx;
-//                                 *pwrvy = *prvy/2;
-//                                 *pwvy = *pwrvy;
-//                                 
-//                                 *pvx = -1 * *pwrvx ;
-//                                 *pvy = *pwrvy *-1;
-                                
-                                
+                                 //*pwrvx = *prvx/2;
+                                 //*pwvx = *pwrvx;
+                                 //*pwrvy = *prvy/2;
+                                 //*pwvy = *pwrvy;
+
+                                 //*pvx = -1 * *pwrvx ;
+                                 //*pvy = *pwrvy *-1;
+
+
                             }
                         }
                     }
             }//end if is moving
         }
-        
+
     }
 
-    
 
-    
+
+
     //Slows down
     world->balls[0]->vx *= 0.95;
     world->balls[0]->vy *= 0.95;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
