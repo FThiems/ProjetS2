@@ -22,18 +22,24 @@
 
 //! Places the collored balls at the right spot
 void init_balls(world_t* world){
-  int col = 1, row, nb = 1;
-  //Set position of first ball
-  *get_px(nb,world) = 775;
-  *get_py(nb,world) = 357;
-  nb++; //A ball has been placed
-  while(nb < NB_BALLS){
-    row = 0;
+    int col = 1, row, nb = 1;
+    
+    //Places the white ball
+    *get_px(0,world) = 385;
+    *get_py(0,world) = 364;
+    
+    //Places the first ball of the triangle
+    *get_px(nb,world) = 775;
+    *get_py(nb,world) = 357;
+    
+    nb++; //A ball has been placed
+    while(nb < NB_BALLS){
+        row = 0;
     while(nb < NB_BALLS && row < col+1){
-      *get_px(nb, world) = *get_px(1,world) + 0.8661 * BALL_SIZE * col;
-      *get_py(nb, world) = *get_py(1, world) - 1.0001*BALL_SIZE / 2 * col + BALL_SIZE * row;
-      nb++;
-      row++;
+        *get_px(nb, world) = *get_px(1,world) + 0.8661 * BALL_SIZE * col;
+        *get_py(nb, world) = *get_py(1, world) - 1.0001*BALL_SIZE / 2 * col + BALL_SIZE * row;
+        nb++;
+        row++;
     }
     col++;
   }
@@ -41,6 +47,7 @@ void init_balls(world_t* world){
 
 void init_data(world_t* world){
     world->gameover = 0;
+    world->main_delay = 10;
     int i;
 
     //Loads sprite images, they need to be freed within clean_data
@@ -53,9 +60,7 @@ void init_data(world_t* world){
       world->balls[i] = calloc(NB_BALLS,sizeof(ball_t**));
     }
 
-    //Sets the default positions of balls
-    *get_px(0,world) = 385;
-    *get_py(0,world) = 364;
+
 
     //Places the collored balls at the right spot
     init_balls(world);
@@ -173,12 +178,14 @@ void update_data(world_t* world){
                             overlapped_x = distance_x / distance_xy * BALL_SIZE;
                             overlapped_y = distance_y / distance_xy * BALL_SIZE;
 
-                            *px = *pwx - overlapped_x;
+                            *px = *pwx + overlapped_x;
 //                             *prvx += overlapped_x;
 
-                            *py = *pwy - overlapped_y;
+                            *py = *pwy + overlapped_y;
 //                             *prvy += overlapped_y;
-
+                            
+                            
+                            
                             //if colliding with moving ball //TODO
                             if (*pwvx || *pwvy){
 

@@ -51,7 +51,7 @@ int main( int argc, char* args[] )
         handle_events(&event,&world);
         update_data(&world);
         refresh_graphics(screen,&world);
-        SDL_Delay(10);
+        SDL_Delay(world.main_delay);
     }
 
     clean_data(&world);

@@ -64,7 +64,7 @@ struct world_s{
     SDL_Surface* table; /*!< Surface SDL de la table de billard */
     SDL_Surface* balls_sprite; /*!< Surface SDL des boules de billard */
     ball_t** balls; /*!< Tableau de pointeurs sur les boules de billard */
-    
+    int main_delay; /*!< Delay between two executions of the main loop */
     };
 
 typedef struct world_s world_t;
