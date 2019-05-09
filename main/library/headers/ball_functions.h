@@ -14,6 +14,7 @@
 //! returns a pointer to ball_number
 ball_t* get_ball(int ball_number,world_t* world);
 
+
 // Positions
 double* get_px(int ball_number,world_t* world);
 

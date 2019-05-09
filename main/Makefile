@@ -29,7 +29,7 @@ clean_o:
 	cd library;rm -f ball_functions.o; rm -f data.o; rm -f events.o; rm -f graphics.o; cd ..
 
 kate:
-	kate Makefile main.c library library/headers
+	kate Makefile main.c library/* library/headers/*
 
 check:
 	$(CHECK_SDL)

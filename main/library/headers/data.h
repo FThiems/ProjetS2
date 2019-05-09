@@ -46,7 +46,7 @@ bool is_falling(world_t* world, int ball_number, int hole_number);
  * \brief Fonction qui teste toutes les boules pour tous les trous pour voir si elles doivent tomber dedans
  * \param world données du monde
  */
-void test_is_falling(world_t* world);
+void all_holes(world_t* world);
 
 /**
  * \brief La fonction initialise les données du monde du jeu
@@ -65,5 +65,9 @@ void clean_data(world_t* world);
  * \param world les données du monde
  */
 void update_data(world_t* world);
+
+
+//!Slows ball by world->friction_multiplier
+void friction_ball(ball_t* current,world_t* world);
 
 #endif

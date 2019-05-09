@@ -8,6 +8,12 @@
 #ifndef BF_VVVV
 #define BF_VVVV
 
+// Pointer
+ball_t* get_ball(int ball_number,world_t* world){
+    return world->balls[ball_number];
+}
+
+////// Deprecated
 // Positions
 double* get_px(int ball_number,world_t* world){
     return &(world->balls[ball_number]->x);

@@ -1,6 +1,6 @@
 /**
  * \file definitions.h
- * \brief Definitions des constantes, des structures et des includes
+ * \brief Constants, structures and includes
  */
 
 #ifndef DEFINITIONS
@@ -13,17 +13,17 @@
 #include <stdbool.h>
 
 /**
- *  \brief Largeur de l'écran de jeu
+ *  \brief Screen width
  */
 #define SCREEN_WIDTH 1288
 
 /**
- *\brief Hauteur de l'écran de jeu
+ *\brief Screen height
  */
 #define SCREEN_HEIGHT 725
 
 /**
- *\brief Taille d'une boule
+ *\brief ball size
  */
 #define BALL_SIZE 42
 /**
@@ -42,15 +42,15 @@
 #define BORDER_DOWN (640-BALL_SIZE/2)
 #define BORDER_UP (85+BALL_SIZE/2)
 /**
- * \brief Number of balls
+ * \brief Ball count
  */
 #define NB_BALLS 16
 /**
- * \brief Nombre de trous
+ * \brief Hole count
  */
 #define NB_HOLES 6
 /**
- * \brief rayon des trous de la table
+ * \brief Hole radius'
 */
 #define HOLE_RADIUS 35
 /**
@@ -62,36 +62,42 @@
  * \brief Ball info
  */
 struct ball_s{
-    double x,y; /*!< Coordonnées du centre de la balle */
-    double vx,vy; /*!< Vecteurs vitesse sur x et y */
-    double vRemainingX,vRemainingY; /*!< Vecteurs vitesse restants à parcourir durant le rafraîchissment */
-    bool fell; /*!< Variable qui indique si la boule est tombée ou pas */
+    double x,y; /*!< Coordinates of the ball's center */
+    double vx,vy; /*!< Speed vectors, on x and y */
+    double vRemainingX,vRemainingY; /*!< Speed vectors that the ball still has to travel during current tic */
+    bool fell; /*!< Flag to tell if a ball already fell in a hole */
     };
 
 typedef struct ball_s ball_t;
 
 /**
- * \brief Trous de la table
+ * \brief Table's holes
  */
 
 struct holes_s{
-    int x;/*!< Coordonnées en x d'un trou */
-    int y;/*!< Coordonnées en y d'un trou */
+    int x;/*!< Hole's x coordinate */
+    int y;/*!< Hole's y coordinate */
     };
 
 typedef struct holes_s holes_t;
 
 /**
- * \brief Représentation du monde du jeu
+ * \brief Data bundling all persistent game infos
  */
 struct world_s{
-    int gameover;                /*!< Variable de fin de jeu */
-    SDL_Surface* table;          /*!< Surface SDL de la table de billard */
-    SDL_Surface* balls_sprite;   /*!< Surface SDL des boules de billard */
-    ball_t** balls;              /*!< Tableau de pointeurs sur les boules de billard */
+    int gameover;                /*!< Game ending variable */
+    SDL_Surface* table;          /*!< SDL Surface of the table */
+    SDL_Surface* balls_sprite;   /*!< SDL Surface of the 16 balls */
+    ball_t** balls;              /*!< Balls pointer array */
     int main_delay;              /*!< Delay between two executions of the main loop */
-    holes_t** holes;             /*!< Tableau de pointeurs sur les trous de la table */
-    };
+    holes_t** holes;             /*!< Holes pointer array */
+    int ghost;                   /*!< Tells if fallen balls should still be active, 1 for bouncy, 2 for showing, 3 for both*/
+    int notBouncing;                /*!< Tells if balls should bounce each other */
+    int funky_overlapp;          /*!< Attempts to mimic the "funky" overlapping code */
+    int friction;                /*!< Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
+    double friction_multiplier;     /*!< Amount by which a balls speed should be multiplied each tic, if subjected to friction */
+    
+};
 
 typedef struct world_s world_t;
 
