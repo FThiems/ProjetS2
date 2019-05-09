@@ -18,19 +18,22 @@
 //! Places the collored balls at the right spot
 void init_balls(world_t* world){
     int col = 1, row, nb = 1;
-    
+
     //Places the white ball
     *get_px(0,world) = 385;
     *get_py(0,world) = 364;
-    
+    world->balls[0]->fell = false;
+
     //Places the first ball of the triangle
     *get_px(nb,world) = 775;
     *get_py(nb,world) = 357;
-    
+    world->balls[nb]->fell = false;
+
     nb++; //A ball has been placed
     while(nb < NB_BALLS){
         row = 0;
     while(nb < NB_BALLS && row < col+1){
+        world->balls[nb]->fell = false;
         *get_px(nb, world) = *get_px(1,world) + 0.8661 * BALL_SIZE * col;
         *get_py(nb, world) = *get_py(1, world) - 1.0001*BALL_SIZE / 2 * col + BALL_SIZE * row;
         nb++;
@@ -40,6 +43,25 @@ void init_balls(world_t* world){
   }
 }
 
+
+//Initialise le tableau des positions des trous de la table
+void init_holes(world_t* world){
+  world->holes[0]->x = 75;
+  world->holes[0]->y = 75;
+  world->holes[1]->x = 644;
+  world->holes[1]->y = 40;
+  world->holes[2]->x = 1213;
+  world->holes[2]->y = 75;
+  world->holes[3]->x = 1213;
+  world->holes[3]->y = 650;
+  world->holes[4]->x = 644;
+  world->holes[4]->y = 685;
+  world->holes[5]->x = 75;
+  world->holes[5]->y = 650;
+}
+
+
+//Initialise les données du monde
 void init_data(world_t* world){
     world->gameover = 0;
     world->main_delay = 10;
@@ -55,22 +77,66 @@ void init_data(world_t* world){
       world->balls[i] = calloc(NB_BALLS,sizeof(ball_t**));
     }
 
+    //Allocation de la mémoire pour le tableau des trous
+    world->holes = calloc(NB_HOLES, sizeof(holes_t*));
+    for(i = 0; i<NB_HOLES; i++){
+      world->holes[i] = calloc(NB_HOLES, sizeof(holes_t**));
+    }
 
 
     //Places the collored balls at the right spot
     init_balls(world);
+
+    //Initialise les trous dans le tableau
+    init_holes(world);
+}
+
+
+
+//Distance euclidienne entre le centre de la balle et le centre du trou
+int dist_ball_hole(world_t* world, int ball_number, int hole_number){
+  return sqrt( (world->balls[ball_number]->x - world->holes[hole_number]->x) * (world->balls[ball_number]->x - world->holes[hole_number]->x)
+           + ( (world->balls[ball_number]->y - world->holes[hole_number]->y) * (world->balls[ball_number]->y - world->holes[hole_number]->y) ) );
+}
+
+
+
+//Fonction qui test si la ball doit rentrer dans le trou ou pas
+bool is_falling(world_t* world, int ball_number, int hole_number){
+  return(dist_ball_hole(world, ball_number, hole_number) < BALL_SIZE/2 + HOLE_RADIUS);
+}
+
+
+
+//fonction qui test à chaque fin de update data si des boules doivent tomber ou non
+void test_is_falling(world_t* world){
+  int ball_number, hole_number, i, j;
+
+  for (i = 0; i<NB_BALLS; i++){
+    for (j = 0; j<NB_HOLES; j++){
+      if (is_falling(world, i, j)){
+        world->balls[i]->fell = true;
+      }
+    }
+  }
 }
 
 
 
 void clean_data(world_t* world){
-    //int i;
-    //SDL_FreeSurface(world->table);
-    //SDL_FreeSurface(world->balls_sprite);
-    /*for(i = 0; i< NB_BALLS; i++){
+    int i;
+    SDL_FreeSurface(world->table);
+    SDL_FreeSurface(world->balls_sprite);
+    //free du tableau des boules
+    for(i = 0; i< NB_BALLS; i++){
       free(world->balls[i]);
     }
-    free(world->balls);*/
+    free(world->balls);
+    //free du tableau des trous
+    for(i = 0; i < 6; i++){
+      free(world->holes[i]);
+    }
+    free(world->holes);
 }
 
 
@@ -99,7 +165,10 @@ void update_data(world_t* world){
     //Every step needs to be the same for a ball, and smaller than (BALL_SIZE/2) (radius)
     total_baby_steps = (int) highest_speed % (BALL_SIZE/2) +2;
     remaining_baby_steps = total_baby_steps;
-    printf("%i\n",total_baby_steps);
+    //printf("%i\n",total_baby_steps);
+    printf("dist_ball_hole : %d\n", dist_ball_hole(world, 0, 0));
+
+
 
     //Small movements loop
     while (remaining_baby_steps >0){
@@ -138,14 +207,13 @@ void update_data(world_t* world){
                         *pvx = fabs(*pvx);
                         *prvx = fabs(*prvx);
                     }
-
-                    //Lower side
-                    if (*py > BORDER_DOWN){
+                    //Lower side + condition pour le trou du bas
+                    if (*py > BORDER_DOWN && (*px < LEFT || *px > RIGHT)){
                         *pvy = -1 * fabs(*pvy);
                         *prvy = -1 * fabs(*prvy);
                     }
-                    //Upper side
-                    if (*py < BORDER_UP){
+                    //Upper side + condition pour le trou du haut
+                    if (*py < BORDER_UP && (*px < LEFT || *px > RIGHT)){
                         *pvy = fabs(*pvy);
                         *prvy = fabs(*prvy);
                     }
@@ -178,9 +246,7 @@ void update_data(world_t* world){
 
                             *py = *pwy + overlapped_y;
 //                             *prvy += overlapped_y;
-                            
-                            
-                            
+
                             //if colliding with moving ball //TODO
                             if (*pwvx || *pwvy){
 
@@ -204,7 +270,10 @@ void update_data(world_t* world){
         }
 
     }
+    //fin while
 
+    //On regarde quelles boules tombent
+    test_is_falling(world);
 
 
 
@@ -212,4 +281,7 @@ void update_data(world_t* world){
     world->balls[0]->vx *= 0.95;
     world->balls[0]->vy *= 0.95;
 
+    //void check_hole_collision(){
+
+    //}
 }

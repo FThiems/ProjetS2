@@ -41,7 +41,9 @@ void refresh_graphics(SDL_Surface* screen, world_t* world){
     for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
         on_screen_x = *get_px(ball_number,world)-BALL_SIZE/2;
         on_screen_y = *get_py(ball_number,world)-BALL_SIZE/2;
-        apply_sub_surface(world->balls_sprite,screen,ball_number*BALL_SIZE,0,BALL_SIZE,BALL_SIZE, on_screen_x, on_screen_y);
+        if(world->balls[ball_number]->fell == false){
+          apply_sub_surface(world->balls_sprite,screen,ball_number*BALL_SIZE,0,BALL_SIZE,BALL_SIZE, on_screen_x, on_screen_y);
+        }
     }
     refresh_surface(screen);
 }
