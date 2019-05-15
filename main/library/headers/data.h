@@ -67,7 +67,11 @@ void clean_data(world_t* world);
 void update_data(world_t* world);
 
 
-//!Slows ball by world->friction_multiplier
+/**
+ * \brief 
+ * \param 
+ * \param 
+ */
 void friction_ball(ball_t* current,world_t* world);
 
 #endif

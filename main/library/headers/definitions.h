@@ -91,12 +91,18 @@ struct world_s{
     ball_t** balls;              /*!< Balls pointer array */
     int main_delay;              /*!< Delay between two executions of the main loop */
     holes_t** holes;             /*!< Holes pointer array */
+    
+    //Game modifiers
     int ghost;                   /*!< Tells if fallen balls should still be active, 1 for bouncy, 2 for showing, 3 for both*/
     int notBouncing;                /*!< Tells if balls should bounce each other */
     int funky_overlapp;          /*!< Attempts to mimic the "funky" overlapping code */
     int friction;                /*!< Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
     double friction_multiplier;     /*!< Amount by which a balls speed should be multiplied each tic, if subjected to friction */
     
+    SDL_Surface* text_ghost;   /*!< SDL Surface of the ghost text */
+    SDL_Surface* text_notBouncing;  /*!< SDL Surface of the not bouncing text */
+    SDL_Surface* text_funky_overlapp;  /*!< SDL Surface of the funky overlapp text */
+    SDL_Surface* text_friction; /*!< SDL Surface of the friction text */
 };
 
 typedef struct world_s world_t;

@@ -12,10 +12,11 @@
  * \brief Signatures des fonctions liées aux balles
  */
 #include "headers/ball_functions.h"
+
 /**
- * \brief Module de gestion des collisions
+ * \brief Signatures des fonctions de gestion des collisions
  */
-#include "collision.c"
+#include "headers/collision.h"
 
 
 ;
@@ -65,6 +66,17 @@ void init_holes(world_t* world){
   world->holes[5]->y = 650;
 }
 
+//!initialisation of sdl surfaces
+void init_sdl_surfaces(world_t* world){
+  //Loads sprite images, they need to be freed within clean_data
+    world->table = load_image("ressources/table.bmp");
+    world->balls_sprite = load_image("ressources/boules.bmp");
+    world->text_ghost = load_image("ressources/Ghost.bmp");
+    world->text_notBouncing = load_image("ressources/Bouncy.bmp");
+    world->text_funky_overlapp = load_image("ressources/Funky.bmp");
+    world->text_friction = load_image("ressources/Friction.bmp");
+}
+
 //Initialise les données du monde
 void init_data(world_t* world){
     int i;
@@ -77,11 +89,6 @@ void init_data(world_t* world){
         world->funky_overlapp = 0; //No funkyness
         world->friction = 0; //Friction for all
         world->friction_multiplier = 0.95;
-    
-
-    //Loads sprite images, they need to be freed within clean_data
-    world->table = load_image("ressources/table.bmp");
-    world->balls_sprite = load_image("ressources/boules.bmp");
 
     //Allocates memory to world->balls[0]
     world->balls = calloc(NB_BALLS,sizeof(ball_t*));
@@ -95,7 +102,9 @@ void init_data(world_t* world){
       world->holes[i] = calloc(NB_HOLES, sizeof(holes_t**));
     }
 
-
+    //initialisation of sdl surfaces
+    init_sdl_surfaces(world);
+    
     //Places the balls at the right spot
     init_balls(world);
 
@@ -151,6 +160,11 @@ void clean_data(world_t* world){
       free(world->holes[i]);
     }
     free(world->holes);
+    
+    SDL_FreeSurface(world->text_notBouncing);
+    SDL_FreeSurface(world->text_friction);
+    SDL_FreeSurface(world->text_ghost);
+    SDL_FreeSurface(world->text_funky_overlapp);
 }
 
 
@@ -279,7 +293,7 @@ void baby_loop(int remaining_baby_steps, world_t* world){
     }
     //fin while
 }
-
+  
 //!Slows ball by world->friction_multiplier
 void friction_ball(ball_t* current,world_t* world){
     //multiplication
@@ -287,9 +301,9 @@ void friction_ball(ball_t* current,world_t* world){
     current->vy *= world->friction_multiplier;
         
     //Set to 0 if really small, to fasten up immobilisation
-    if( fabs(current->vx)  <0.1)
+    if( fabs(current->vx)  <0.01)
         current->vx =0;
-    if( fabs(current->vy)  <0.1)
+    if( fabs(current->vy)  <0.01)
         current->vy = 0;
 }
 

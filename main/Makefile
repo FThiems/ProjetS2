@@ -1,4 +1,4 @@
-SRC=main.c $(LIB)sdl-light.c $(LIB)ball_functions.o $(LIB)data.o $(LIB)events.o $(LIB)graphics.o
+SRC=main.c $(LIB)sdl-light.c $(LIB)ball_functions.o $(LIB)data.o $(LIB)events.o $(LIB)graphics.o $(LIB)collision.o
 HEADERS=$(LIBH)sdl-light.h $(LIBH)graphics.h $(LIBH)events.h $(LIBH)data.h $(LIBH)definitions.h
 BIN=billard
 LIBS=-L/usr/lib/x86_64-linux-gnu -lsndfile -lm
@@ -21,6 +21,9 @@ events.o: $(LIBH)definitions.h $(LIB)events.c
 
 graphics.o: $(LIBH)ball_functions.h $(LIBH)definitions.h $(LIB)graphics.c
 	gcc -Wall -g `sdl-config --cflags --libs`-c graphics.c -o graphics.o
+	
+collision.o: $(LIBH)collision.h $(LIB)collision.c
+	gcc -Wall -g `sdl-config --cflags --libs`-c collision.c -o collision.o
 
 clean: clean_o
 	rm -f $(BIN); make clean_o
