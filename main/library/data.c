@@ -50,7 +50,7 @@ void init_balls(world_t* world){
   }
 }
 
-//Initialise le tableau des positions des trous de la table
+//Places holes
 void init_holes(world_t* world){
   world->holes[0]->x = 75;
   world->holes[0]->y = 75;
