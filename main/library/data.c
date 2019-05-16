@@ -25,10 +25,12 @@
 //! Places the collored balls at the right spot
 void init_balls(world_t* world){
     int col = 1, row, nb = 1;
+    ball_t *current;
 
     //Places the white ball
-    *get_px(0,world) = 385;
-    *get_py(0,world) = 364;
+    current = get_ball(0,world);
+    current->x = 385;
+    current->y = 364;
     world->balls[0]->fell = 0;
 
     //Places the first ball of the triangle
@@ -83,28 +85,31 @@ void init_data(world_t* world){
     
     //Set game parameters
         world->gameover = 0;
+        world->active_player=0;
+
         world->main_delay = 10; //100fps
         world->ghost = 0; //No ghost balls
         world->notBouncing = 0; //Balls shall bounce
         world->funky_overlapp = 0; //No funkyness
         world->friction = 0; //Friction for all
         world->friction_multiplier = 0.95;
+        world->notWaiting = 0; //Do wait between shots
 
     //Allocates memory to world->balls[0]
     world->balls = calloc(NB_BALLS,sizeof(ball_t*));
     for(i = 0; i<NB_BALLS; i++){
-      world->balls[i] = calloc(NB_BALLS,sizeof(ball_t**));
+      world->balls[i] = calloc(1,sizeof(ball_t));
     }
 
     //Allocation de la mémoire pour le tableau des trous
     world->holes = calloc(NB_HOLES, sizeof(holes_t*));
     for(i = 0; i<NB_HOLES; i++){
-      world->holes[i] = calloc(NB_HOLES, sizeof(holes_t**));
+      world->holes[i] = calloc(1, sizeof(holes_t));
     }
 
     //initialisation of sdl surfaces
     init_sdl_surfaces(world);
-    
+
     //Places the balls at the right spot
     init_balls(world);
 
@@ -129,14 +134,14 @@ bool is_falling(world_t* world, int ball_number, int hole_number){
 }
 
 
-//fonction qui test à chaque fin de update data si des boules doivent tomber ou non
+//fonction qui test à chaque fin de baby loop si des boules doivent tomber ou non
 void all_holes(world_t* world){
   int ball_number, hole_number, i, j;
 
   for (i = 0; i<NB_BALLS; i++){
     for (j = 0; j<NB_HOLES; j++){
       if (is_falling(world, i, j)){
-        world->balls[i]->fell = 1;
+        world->balls[i]->fell = 1; //TODO
       }
     }
   }

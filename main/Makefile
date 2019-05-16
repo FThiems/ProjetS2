@@ -16,7 +16,7 @@ ball_functions.o: $(LIB)ball_functions.c
 data.o: $(LIBH)data.c $(LIB)ball_functions.o $(LIBH)ball_functions.h $(LIBH)defintions.h
 	gcc -Wall -g `sdl-config --cflags --libs` -c data.c -o data.o
 
-events.o: $(LIBH)definitions.h $(LIB)events.c
+events.o: $(LIBH)definitions.h $(LIB)events.c $(LIB)ball_functions.c
 	gcc -Wall -g `sdl-config --cflags --libs` -c events.c -o events.o
 
 graphics.o: $(LIBH)ball_functions.h $(LIBH)definitions.h $(LIB)graphics.c
