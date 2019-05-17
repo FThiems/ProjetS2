@@ -25,19 +25,19 @@ Main_c=gcc -Wall -g $(SRC) -lm `sdl-config --cflags --libs` -o $(BIN)
 
 ############################## Lib
 ball_functions.o:  $(LIB)ball_functions.c  $(LIBH)ball_functions.h   $(DEFH)
-	$(COMPILE)        -c ball_functions.c      -o ball_functions.o
+	$(COMPILE)    -c ball_functions.c      -o ball_functions.o
 
 data.o:            $(LIB)data.c            $(LIBH)data.h             $(DEFH)  $(BALLF)  collision.o
-	$(COMPILE)        -c data.c                -o data.o
+	$(COMPILE)    -c data.c                -o data.o
 
 events.o:          $(LIB)events.c          $(LIBH)events.h           $(DEFH)  $(BALLF)
-	$(COMPILE)        -c events.c              -o events.o
+	$(COMPILE)    -c events.c              -o events.o
 
 graphics.o:        $(LIB)graphics.c        $(LIBH)graphics.h         $(DEFH)  $(BALLF)
-	$(COMPILE)        -c graphics.c            -o graphics.o
+	$(COMPILE)    -c graphics.c            -o graphics.o
 
 collision.o:       $(LIB)collision.c       $(LIBH)collision.h
-	$(COMPILE)        -c collision.c           -o collision.o
+	$(COMPILE)    -c collision.c           -o collision.o
 
 
 ############################## Clean
