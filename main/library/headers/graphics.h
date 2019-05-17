@@ -1,29 +1,55 @@
 /**
- * \file graphics.c
- * \brief Signatures des fonctions liées aux éléments graphiques du jeu
+ * \file graphics.h
+ * \brief Display functions
  */
 
+
+#ifndef GRAPHICSFLAG
+#define GRAPHICSFLAG
+
+///// Imports //////////////////////////////////////////////////////////////
 /**
- * \brief Definitions des constantes, des structures et des includes
+ * \brief Constants, structures and includes
  */
 #include "definitions.h"
+
 /**
- * \brief Fonctions liées aux balles
+ * \brief Ball pointer retrieving functions
  */
 #include "ball_functions.h"
 
-/**** SIGNATURES ****/
+
+
+
+///// Signatures //////////////////////////////////////////////////////////////
 
 /**
- * \brief La fonction initialise les transparences des différentes surfaces
- * \param screen la surface correspondant à l'écran de jeu
- * \param world les données du monde
+ * \brief Sets the different images transparency values
+ * \param screen Screen surface
+ * \param world Data bundling all persistent game infos
  */
-void  init_graphics(SDL_Surface* screen, world_t* world);
+void init_graphics(SDL_Surface* screen, world_t* world);
 
 /**
- * \brief La fonction rafrachit l'écran en fonction de l'état des données du monde
- * \param screen la surface de l'écran de jeu
- * \param world les données du monde
+ * \brief Displays every ball_t on the table
+ * \param screen Screen surface
+ * \param world Data bundling all persistent game infos
+ */
+void refresh_balls(SDL_Surface* screen, world_t* world);
+
+/**
+ * \brief Displays game modifiers
+ * \param screen Screen surface
+ * \param world Data bundling all persistent game infos
+ */
+void refresh_modifiers(SDL_Surface* screen, world_t* world);
+
+/**
+ * \brief Function called each tic to process display output
+ * \param screen Screen surface
+ * \param world Data bundling all persistent game infos
  */
 void refresh_graphics(SDL_Surface* screen, world_t* world);
+
+
+#endif

@@ -1,28 +1,33 @@
 /**
  * \file data.c
- * \brief Fonctions liées aux données du monde
+ * \brief World editing functions
  */
+
 
 /**
- * \brief Definitions des constantes, des structures et des includes
+ * \brief Imports and function headers for this file
  */
-#include "headers/definitions.h"
-
-/**
- * \brief Signatures des fonctions liées aux balles
- */
-#include "headers/ball_functions.h"
-
-/**
- * \brief Signatures des fonctions de gestion des collisions
- */
-#include "headers/collision.h"
+#include "headers/data.h"
 
 
-;
 
 ///// Initialisations //////////////////////////////////////////////////////////////
-//! Places the collored balls at the right spot
+//!Sets world's parameters
+void init_parameters(world_t* world){
+    world->gameover = 0; //do start the game
+    world->active_player=0; //Player 0 is starting
+    world->main_delay = 10; //100fps
+
+    //Game modifiers
+    world->ghost = 0; //No ghost balls
+    world->notBouncing = 0; //Balls shall bounce
+    world->funky_overlapp = 0; //No funkyness
+    world->friction = 0; //Friction for all
+    world->friction_multiplier = 0.95;
+    world->notWaiting = 0; //Do wait between shots
+}
+
+//! Places all balls at the right spot
 void init_balls(world_t* world){
     int col = 1, row, nb = 1;
     ball_t *current;
@@ -52,7 +57,7 @@ void init_balls(world_t* world){
   }
 }
 
-//Places holes
+//!Places holes
 void init_holes(world_t* world){
   world->holes[0]->x = 75;
   world->holes[0]->y = 75;
@@ -68,7 +73,7 @@ void init_holes(world_t* world){
   world->holes[5]->y = 650;
 }
 
-//!initialisation of sdl surfaces
+//!Loads all game images
 void init_sdl_surfaces(world_t* world){
   //Loads sprite images, they need to be freed within clean_data
     world->table = load_image("ressources/table.bmp");
@@ -79,21 +84,10 @@ void init_sdl_surfaces(world_t* world){
     world->text_friction = load_image("ressources/Friction.bmp");
 }
 
-//Initialise les données du monde
+
+//!Initializes all of world's fields
 void init_data(world_t* world){
     int i;
-    
-    //Set game parameters
-        world->gameover = 0;
-        world->active_player=0;
-
-        world->main_delay = 10; //100fps
-        world->ghost = 0; //No ghost balls
-        world->notBouncing = 0; //Balls shall bounce
-        world->funky_overlapp = 0; //No funkyness
-        world->friction = 0; //Friction for all
-        world->friction_multiplier = 0.95;
-        world->notWaiting = 0; //Do wait between shots
 
     //Allocates memory to world->balls[0]
     world->balls = calloc(NB_BALLS,sizeof(ball_t*));
@@ -107,13 +101,16 @@ void init_data(world_t* world){
       world->holes[i] = calloc(1, sizeof(holes_t));
     }
 
-    //initialisation of sdl surfaces
+    //Set world's parameters
+    init_parameters(world);
+
+    //Load all game images
     init_sdl_surfaces(world);
 
-    //Places the balls at the right spot
+    //Place all balls at the right spot
     init_balls(world);
 
-    //Initialise les trous dans le tableau
+    //Place holes
     init_holes(world);
 }
 
@@ -121,20 +118,20 @@ void init_data(world_t* world){
 
 
 ///// Hole functions //////////////////////////////////////////////////////////////
-//Distance euclidienne entre le centre de la balle et le centre du trou
+//!Calculates the distance between the corresponding ball and hole s
 int dist_ball_hole(world_t* world, int ball_number, int hole_number){
   return sqrt( (world->balls[ball_number]->x - world->holes[hole_number]->x) * (world->balls[ball_number]->x - world->holes[hole_number]->x)
            + ( (world->balls[ball_number]->y - world->holes[hole_number]->y) * (world->balls[ball_number]->y - world->holes[hole_number]->y) ) );
 }
 
 
-//Fonction qui teste si la ball_t doit rentrer dans le trou ou pas
+//!Function checking if the corresponding ball should fall in the hole or not
 bool is_falling(world_t* world, int ball_number, int hole_number){
   return(dist_ball_hole(world, ball_number, hole_number) < BALL_SIZE/2 + HOLE_RADIUS);
 }
 
 
-//fonction qui test à chaque fin de baby loop si des boules doivent tomber ou non
+//Function checking if any ball should fall in any hole and making them fall
 void all_holes(world_t* world){
   int ball_number, hole_number, i, j;
 
@@ -151,6 +148,7 @@ void all_holes(world_t* world){
 
 
 ///// Clean function //////////////////////////////////////////////////////////////
+//!Cleans all mallocs and callocs
 void clean_data(world_t* world){
     int i;
     SDL_FreeSurface(world->table);

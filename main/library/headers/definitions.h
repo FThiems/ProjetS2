@@ -3,15 +3,21 @@
  * \brief Constants, structures and includes
  */
 
+
 #ifndef DEFINITIONS
 #define DEFINITIONS
 
+///// Imports //////////////////////////////////////////////////////////////
 #include "sdl-light.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
 
+
+
+
+///// Constants //////////////////////////////////////////////////////////////
 /**
  *  \brief Screen width
  */
@@ -58,7 +64,11 @@
  */
 #define LEFT 625
 #define RIGHT 663
- /**
+
+
+
+///// Structures //////////////////////////////////////////////////////////////
+/**
  * \brief Ball info
  */
 struct ball_s{
@@ -66,20 +76,19 @@ struct ball_s{
     double vx,vy; /*!< Speed vectors, on x and y */
     double vRemainingX,vRemainingY; /*!< Speed vectors that the ball still has to travel during current tic */
     bool fell; /*!< Flag to tell if a ball already fell in a hole */
-    };
-
+};
 typedef struct ball_s ball_t;
+
 
 /**
  * \brief Table's holes
  */
-
 struct holes_s{
     int x;/*!< Hole's x coordinate */
     int y;/*!< Hole's y coordinate */
-    };
-
+};
 typedef struct holes_s holes_t;
+
 
 /**
  * \brief Data bundling all persistent game infos

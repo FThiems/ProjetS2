@@ -1,17 +1,22 @@
 /**
- * \file data.c
- * \brief Fonctions liées aux balles
+ * \file ball_functions.c
+ * \brief Ball pointer retrieving functions
  */
 
-#include"headers/definitions.h"
 
-#ifndef BF_VVVV
-#define BF_VVVV
+/**
+ * \brief Imports and function headers for this file
+ */
+#include"headers/ball_functions.h"
+
 
 // Pointer
 ball_t* get_ball(int ball_number,world_t* world){
     return world->balls[ball_number];
 }
+
+
+
 
 ////// Deprecated
 // Positions
@@ -38,6 +43,3 @@ double* get_p_Remaining_vx(int ball_number,world_t* world){
 double* get_p_Remaining_vy(int ball_number,world_t* world){
     return &(world->balls[ball_number]->vRemainingY);
 }
-
-
-#endif

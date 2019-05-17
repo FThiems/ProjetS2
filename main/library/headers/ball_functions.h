@@ -1,16 +1,22 @@
 /**
- * \file data.c
- * \brief Signatures des fonctions liées aux balles
+ * \file ball_functions.h
+ * \brief Ball pointer retrieving functions
  */
-
-/**
- * \brief Definitions des constantes, des structures et des includes
- */
-#include "definitions.h"
 
 
 #ifndef BF_VVVV
 #define BF_VVVV
+
+///// Imports //////////////////////////////////////////////////////////////
+/**
+ * \brief Constants, structures and includes
+ */
+#include "definitions.h"
+
+
+
+
+///// Signatures //////////////////////////////////////////////////////////////
 //! returns a pointer to ball_number
 ball_t* get_ball(int ball_number,world_t* world);
 

@@ -3,40 +3,32 @@
  * \brief Billard
  */
 
+
 /**
- * \brief Definitions des constantes, des structures et des includes
+ * \brief Constants, structures and includes
  */
 #include "library/headers/definitions.h"
 
 /**
- *\brief Signatures des fonctions de data.c
+ *\brief World editing functions
  */
 #include "library/headers/data.h"
 
 /**
- * \brief Fonctions liées aux éléments graphiques du jeu
+ * \brief Display functions
  */
 #include "library/headers/graphics.h"
 
 /**
- * \brief Fonctions liées aux éléments graphiques du jeu
+ * \brief Player input event handling
  */
 #include "library/headers/events.h"
 
-/**
- * \brief La fonction indique si le jeu est fini en fonction des données du monde
- * \param world les données du monde
- * \return 1 si le jeu est fini, 0 sinon
- */
-int is_game_over(world_t* world){
-    return world->gameover;
-}
+
 
 /**
- *  \brief programme principal qui implémente la boucle du jeu
+ *  \brief Main program
  */
-
-
 int main( int argc, char* args[] )
 {
     SDL_Event event;
@@ -47,7 +39,7 @@ int main( int argc, char* args[] )
     init_data(&world);
     init_graphics(screen,&world);
 
-    while(!is_game_over(&world)){
+    while(!world.gameover){
         handle_events(&event,&world);
         update_data(&world);
         refresh_graphics(screen,&world);

@@ -1,18 +1,47 @@
 /**
- * \file events.c
- * \brief Signatures des fonctions liées à la gestion des evenements 
+ * \file events.h
+ * \brief Player input event handling
  */
 
+
+#ifndef EVENTSFLAG
+#define EVENTSFLAG
+
+///// Imports //////////////////////////////////////////////////////////////
 /**
- * \brief Definitions des constantes, des structures et des includes
+ * \brief Constants, structures and includes
  */
 #include "definitions.h"
 
-/**** SIGNATURES ****/
+/**
+ * \brief Ball pointer retrieving functions
+ */
+#include "ball_functions.h"
+
+
+
+
+///// Signatures //////////////////////////////////////////////////////////////
 
 /**
- * \brief La fonction gère les évènements ayant eu lieu et qui n'ont pas encore été traités
- * \param event paramètre qui contient les événements
- * \param world les données du monde
+ * \brief Tells if some balls are still moving
+ * \param world Data bundling all persistent game infos
+ */
+
+int anyMoving(world_t* world);
+
+/**
+ * \brief Handles a mouse intput
+ * \param world Data bundling all persistent game infos
+ */
+void mouse_input(world_t* world);
+
+/**
+ * \brief Function called each tic to process player inputs
+ * \param event SDL's events
+ * \param world Data bundling all persistent game infos
  */
 void handle_events(SDL_Event* event,world_t* world);
+
+
+#endif

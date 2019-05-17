@@ -1,19 +1,16 @@
 /**
  * \file events.c
- * \brief Fonctions liées à la gestion des evenements
+ * \brief Player input event handling
  */
+
 
 /**
- * \brief Definitions des constantes, des structures et des includes
+ * \brief Imports and function headers for this file
  */
-#include "headers/definitions.h"
+#include "headers/events.h"
 
-/**
- * \brief Signatures des fonctions liées aux balles
- */
-#include "headers/ball_functions.h"
 
-/**** FONCTIONS ****/
+
 //!Tells if some balls are still moving
 int anyMoving(world_t* world){
     int ball_number; //!Current ball's index
@@ -38,13 +35,13 @@ void mouse_input(world_t* world){
         //Give the white ball a speed
         world->balls[0]->vx = (mouseX - world->balls[0]->x) *SPEED_COEF;
         world->balls[0]->vy = (mouseY - world->balls[0]->y) *SPEED_COEF;
-
+        printf("active : %i\n",world->active_player);
         world->active_player = (world->active_player+1)%2; //Switch player
     }
 }
 
 ///// Handle events //////////////////////////////////////////////////////////////
-//!Function called
+//!Function called each tic to process player inputs
 void handle_events(SDL_Event* event,world_t* world){
     //Input variables
     Uint8 *keystates;
