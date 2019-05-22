@@ -82,8 +82,16 @@ void init_sdl_surfaces(world_t* world){
     world->text_notBouncing = load_image("ressources/Bouncy.bmp");
     world->text_funky_overlapp = load_image("ressources/Funky.bmp");
     world->text_friction = load_image("ressources/Friction.bmp");
+    world->text_numbers0 = load_image("ressources/numb.bmp");
+    world->text_numbers1 = load_image("ressources/numb1.bmp");
 }
 
+//Initialise les scores des joueurs
+void init_score(world_t* world){
+    world->p0 = 0;
+    world->p1 = 0;
+    world->pointsBuffer = 0;
+}
 
 //!Initializes all of world's fields
 void init_data(world_t* world){
@@ -101,6 +109,9 @@ void init_data(world_t* world){
       world->holes[i] = calloc(1, sizeof(holes_t));
     }
 
+    //Set player turn
+    world->currentPlayer = 0;
+
     //Set world's parameters
     init_parameters(world);
 
@@ -112,6 +123,9 @@ void init_data(world_t* world){
 
     //Place holes
     init_holes(world);
+
+    //Init score
+    init_score(world);
 }
 
 
@@ -127,23 +141,39 @@ int dist_ball_hole(world_t* world, int ball_number, int hole_number){
 
 //!Function checking if the corresponding ball should fall in the hole or not
 bool is_falling(world_t* world, int ball_number, int hole_number){
-  return(dist_ball_hole(world, ball_number, hole_number) < BALL_SIZE/2 + HOLE_RADIUS);
+    if(!(world->balls[ball_number]->fell)){
+        return(dist_ball_hole(world, ball_number, hole_number) < BALL_SIZE/2 + HOLE_RADIUS);
+    }
 }
 
 
 //Function checking if any ball should fall in any hole and making them fall
 void all_holes(world_t* world){
-  int ball_number, hole_number, i, j;
+  int ball_number, hole_number;
 
-  for (i = 0; i<NB_BALLS; i++){
-    for (j = 0; j<NB_HOLES; j++){
-      if (is_falling(world, i, j)){
-        world->balls[i]->fell = 1; //TODO
+  for (ball_number = 0; ball_number<NB_BALLS; ball_number++){
+    for (hole_number = 0; hole_number<NB_HOLES; hole_number++){
+      if (is_falling(world, ball_number, hole_number)){
+        world->balls[ball_number]->fell = 1;
+        scoring(world, ball_number);
       }
     }
   }
 }
 
+//Adds the fallen ball's points to the turn point buffer
+void scoring(world_t* world, int ball_number){
+    world->pointsBuffer += ball_number;
+}
+
+//Transfere les points du buffer au joueur
+void pointsTransfer(world_t* world){
+    if((world->balls[0]->fell + world->active_player)%2)
+        world->p0 += world->pointsBuffer;
+    else
+        world->p1 += world->pointsBuffer;
+    world->pointsBuffer = 0;
+}
 
 
 
@@ -190,12 +220,19 @@ void wall_bounce(int ball_number, world_t* world){
         current->vRemainingX = fabs(current->vRemainingX);
     }
     //Lower side + condition pour le trou du bas
-    if (current->y > BORDER_DOWN && (current->x < LEFT || current->x > RIGHT)){
+    if ((current->y > BORDER_DOWN)
+    - (current->x < LEFT || current->x > RIGHT)
+    + (current->y > BORDER_DOWN + HOLE_RADIUS))
+    {
         current->vy = -1 * fabs(current->vy);
         current->vRemainingY = -1 * fabs(current->vRemainingY);
     }
     //Upper side + condition pour le trou du haut
-    if (current->y < BORDER_UP && (current->x < LEFT || current->x > RIGHT)){
+    if (
+    (current->y < BORDER_UP)
+    - (current->x < LEFT || current->x > RIGHT)
+    + (current->y > BORDER_UP - HOLE_RADIUS)
+    ){
         current->vy = fabs(current->vy);
         current->vRemainingY = fabs(current->vRemainingY);
     }
@@ -368,6 +405,19 @@ void update_data(world_t* world){
 
     //Slows down
     friction(world);
+
+    //Transfere les points
+    if(!anyMoving(world)){
+
+        //Transfert de points
+        pointsTransfer(world);
+
+        if(get_ball(0, world)->fell){
+             get_ball(0,world)->x = 385;
+             get_ball(0,world)->y = 364;
+        }
+        get_ball(0, world)->fell = false;
+    }
 
 }
 

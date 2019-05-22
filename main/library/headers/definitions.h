@@ -98,8 +98,10 @@ struct world_s{
         //Flags
         int gameover;                /*!< Game ending variable */
         int active_player;           /*!< Active player, 0 or 1 */
-        //int p0;                     /*!< Player 0's points */
-        //int p1;                     /*!< Player 1's points */
+        int p0;                     /*!< Player 0's points */
+        int p1;                     /*!< Player 1's points */
+        int pointsBuffer;           /*!< Points buffer */
+        int currentPlayer;          /*!< Current player playing */
         //Data
         ball_t** balls;              /*!< Balls pointer array */
         holes_t** holes;             /*!< Holes pointer array */
@@ -124,6 +126,8 @@ struct world_s{
         SDL_Surface* text_notBouncing;  /*!< SDL Surface of the not bouncing text */
         SDL_Surface* text_funky_overlapp;  /*!< SDL Surface of the funky overlapp text */
         SDL_Surface* text_friction; /*!< SDL Surface of the friction text */
+        SDL_Surface* text_numbers0; /*!< SDL Surface of the number of points of P0 */
+        SDL_Surface* text_numbers1; /*!< SDL Surface of the number of points of P1 */
 };
 
 typedef struct world_s world_t;

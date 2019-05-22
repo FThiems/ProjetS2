@@ -86,6 +86,19 @@ bool is_falling(world_t* world, int ball_number, int hole_number);
  */
 void all_holes(world_t* world);
 
+/**
+ * \brief Adds the fallen ball's points to the turn point buffer
+ * \param world Data bundling all persistent game infos
+ * \param ball_number Index of the working ball
+ */
+void scoring(world_t* world, int ball_number);
+
+/**
+ * \brief Transfers the content of the point buffer when the turn is over
+ * \param world Data bundling all persistent game infos
+ */
+
+void pointsTransfer(world_t* world);
 
 
 

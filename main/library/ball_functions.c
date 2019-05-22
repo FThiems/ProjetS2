@@ -10,6 +10,24 @@
 #include"headers/ball_functions.h"
 
 
+//!Tells if some balls are still moving
+bool anyMoving(world_t* world){
+    int ball_number; //!Current ball's index
+    ball_t* current; //!Current ball's pointer
+
+    if(world->notWaiting){
+        return true;
+    }
+
+    for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
+        current = get_ball(ball_number,world);
+        if (current->vx>0.05 || current->vy>0.05) //if moving
+            return true;
+    }
+
+    return false; //none was moving
+}
+
 // Pointer
 ball_t* get_ball(int ball_number,world_t* world){
     return world->balls[ball_number];

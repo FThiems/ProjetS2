@@ -9,22 +9,6 @@
  */
 #include "headers/events.h"
 
-
-
-//!Tells if some balls are still moving
-int anyMoving(world_t* world){
-    int ball_number; //!Current ball's index
-    ball_t* current; //!Current ball's pointer
-
-    for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
-        current = get_ball(ball_number,world);
-        if (current->vx>0.05 || current->vy>0.05) //if moving
-            return 1;
-    }
-
-    return 0; //none was moving
-}
-
 ///// Inputs //////////////////////////////////////////////////////////////
 //!Handles a mouse intput
 void mouse_input(world_t* world){
@@ -37,6 +21,7 @@ void mouse_input(world_t* world){
         world->balls[0]->vy = (mouseY - world->balls[0]->y) *SPEED_COEF;
         printf("active : %i\n",world->active_player);
         world->active_player = (world->active_player+1)%2; //Switch player
+        printf("%d et %d buffer = %d \n", world->p0, world->p1, world->pointsBuffer);
     }
 }
 
@@ -73,6 +58,9 @@ void handle_events(SDL_Event* event,world_t* world){
         //friction
         if( keystates[ SDLK_r ]  )
             world->friction = (world->friction +1)%4;              // Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
+
+        world->notWaiting = world->friction;
+
     }
 
 }

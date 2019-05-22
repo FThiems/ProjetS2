@@ -18,6 +18,8 @@ void  init_graphics(SDL_Surface* screen, world_t* world){
     set_transparence(screen, world->text_notBouncing, 204, 0, 204);
     set_transparence(screen, world->text_ghost, 204, 0, 204);
     set_transparence(screen, world->text_friction, 204, 0, 204);
+    set_transparence(screen, world->text_numbers0, 204, 0, 204);
+    set_transparence(screen, world->text_numbers1, 204, 0, 204);
 }
 
 
@@ -55,6 +57,15 @@ void refresh_modifiers(SDL_Surface* screen, world_t* world){
     apply_sub_surface(world->text_notBouncing   , screen, inImageX, /*in image y*/((world->notBouncing)   %maxStates)*height, width, height, 400, on_screen_y);
     apply_sub_surface(world->text_funky_overlapp, screen, inImageX, /*in image y*/((world->funky_overlapp)%maxStates)*height, width, height, 800, on_screen_y-10);
     apply_sub_surface(world->text_friction      , screen, inImageX, /*in image y*/((world->friction)      %maxStates)*height, width, height, 950, on_screen_y);
+
+    width = 22;
+    height = 56;
+    int inImageY = 0;
+    on_screen_y = 8;
+    maxStates = 62;
+
+    apply_sub_surface(world->text_numbers0      , screen, /*in image x*/((world->p0)      %maxStates)*width, inImageY , width, height, 108, on_screen_y);
+    apply_sub_surface(world->text_numbers1      , screen, /*in image x*/((world->p1)      %maxStates)*width, inImageY , width, height, 1105, on_screen_y);
 }
 
 

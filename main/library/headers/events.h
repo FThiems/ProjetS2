@@ -24,13 +24,6 @@
 ///// Signatures //////////////////////////////////////////////////////////////
 
 /**
- * \brief Tells if some balls are still moving
- * \param world Data bundling all persistent game infos
- */
-
-int anyMoving(world_t* world);
-
-/**
  * \brief Handles a mouse intput
  * \param world Data bundling all persistent game infos
  */
