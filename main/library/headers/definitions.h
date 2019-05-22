@@ -97,11 +97,7 @@ struct world_s{
     //Game infos
         //Flags
         int gameover;                /*!< Game ending variable */
-        int active_player;           /*!< Active player, 0 or 1 */
-        int p0;                     /*!< Player 0's points */
-        int p1;                     /*!< Player 1's points */
-        int pointsBuffer;           /*!< Points buffer */
-        int currentPlayer;          /*!< Current player playing */
+
         //Data
         ball_t** balls;              /*!< Balls pointer array */
         holes_t** holes;             /*!< Holes pointer array */
@@ -113,6 +109,19 @@ struct world_s{
         SDL_Surface* table;          /*!< SDL Surface of the table */
         SDL_Surface* balls_sprite;   /*!< SDL Surface of the 16 balls */
 
+    //Player handling
+        //Flag
+        int active_player;           /*!< Active player, 0 or 1 */
+        int playerChanged;           /*!< Tells if the player already changed since last turn */
+        //Data
+        int p0;                     /*!< Player 0's points */
+        int p1;                     /*!< Player 1's points */
+        int pointsBuffer;           /*!< Points buffer */
+        //Images
+        SDL_Surface* text_numbers0; /*!< SDL Surface of the number of points of P0 */
+        SDL_Surface* text_numbers1; /*!< SDL Surface of the number of points of P1 */
+        SDL_Surface* text_player; /*!< SDL Surface of the Logos of both players*/
+
 
     //Game modifiers
         //Flags
@@ -121,13 +130,15 @@ struct world_s{
         int funky_overlapp;          /*!< Attempts to mimic the "funky" overlapping code */
         int friction;                /*!< Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
         int notWaiting;                   /*!< Tells if players should wait between two shot */
+        int fight;                  /*!< Send the ghosts after get_ball(1, world) */
+
         //Images
         SDL_Surface* text_ghost;   /*!< SDL Surface of the ghost text */
         SDL_Surface* text_notBouncing;  /*!< SDL Surface of the not bouncing text */
         SDL_Surface* text_funky_overlapp;  /*!< SDL Surface of the funky overlapp text */
         SDL_Surface* text_friction; /*!< SDL Surface of the friction text */
-        SDL_Surface* text_numbers0; /*!< SDL Surface of the number of points of P0 */
-        SDL_Surface* text_numbers1; /*!< SDL Surface of the number of points of P1 */
+
+
 };
 
 typedef struct world_s world_t;

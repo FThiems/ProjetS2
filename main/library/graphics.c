@@ -13,13 +13,19 @@
 ///// Initialisation //////////////////////////////////////////////////////////////
 //!Sets the different images transparency values
 void  init_graphics(SDL_Surface* screen, world_t* world){
+    //Modifiers
     set_transparence(screen,world->balls_sprite,255,0,255);
     set_transparence(screen, world->text_funky_overlapp, 204, 0, 204);
     set_transparence(screen, world->text_notBouncing, 204, 0, 204);
     set_transparence(screen, world->text_ghost, 204, 0, 204);
     set_transparence(screen, world->text_friction, 204, 0, 204);
+
+    //Numbers
     set_transparence(screen, world->text_numbers0, 204, 0, 204);
     set_transparence(screen, world->text_numbers1, 204, 0, 204);
+
+    //Active player
+    set_transparence(screen, world->text_player, 204, 0, 204);
 }
 
 
@@ -53,19 +59,27 @@ void refresh_modifiers(SDL_Surface* screen, world_t* world){
     int on_screen_y = 693;
 
 
-    apply_sub_surface(world->text_ghost         , screen, inImageX, /*in image y*/((world->ghost)         %maxStates)*height, width, height, 240, on_screen_y);
-    apply_sub_surface(world->text_notBouncing   , screen, inImageX, /*in image y*/((world->notBouncing)   %maxStates)*height, width, height, 400, on_screen_y);
-    apply_sub_surface(world->text_funky_overlapp, screen, inImageX, /*in image y*/((world->funky_overlapp)%maxStates)*height, width, height, 800, on_screen_y-10);
-    apply_sub_surface(world->text_friction      , screen, inImageX, /*in image y*/((world->friction)      %maxStates)*height, width, height, 950, on_screen_y);
+    apply_sub_surface(world->text_ghost         , screen, inImageX, /*in image y*/((world->ghost)         %maxStates)*height, width, height, /* on screen x*/ 240, on_screen_y);
+    apply_sub_surface(world->text_notBouncing   , screen, inImageX, /*in image y*/((world->notBouncing)   %maxStates)*height, width, height, /* on screen x*/ 400, on_screen_y);
+    apply_sub_surface(world->text_funky_overlapp, screen, inImageX, /*in image y*/((world->funky_overlapp)%maxStates)*height, width, height, /* on screen x*/ 800, on_screen_y-10);
+    apply_sub_surface(world->text_friction      , screen, inImageX, /*in image y*/((world->friction)      %maxStates)*height, width, height, /* on screen x*/ 950, on_screen_y);
 
+    //Player points
+    maxStates = 62;
     width = 22;
     height = 56;
     int inImageY = 0;
     on_screen_y = 8;
-    maxStates = 62;
 
-    apply_sub_surface(world->text_numbers0      , screen, /*in image x*/((world->p0)      %maxStates)*width, inImageY , width, height, 108, on_screen_y);
-    apply_sub_surface(world->text_numbers1      , screen, /*in image x*/((world->p1)      %maxStates)*width, inImageY , width, height, 1105, on_screen_y);
+
+    apply_sub_surface(world->text_numbers0      , screen, /*in image x*/((world->p0) %maxStates)*width, inImageY , width, height, /* on screen x*/ 108, on_screen_y);
+    apply_sub_surface(world->text_numbers1      , screen, /*in image x*/((world->p1) %maxStates)*width, inImageY , width, height, /* on screen x*/ 1105, on_screen_y);
+
+    //Active player display
+    maxStates = 2;
+    width = 44;
+    int on_screen_x = (int) 1288/2- width/2 /*(center)*/ +(width*1.5* (world->active_player*2-1)) ;
+    apply_sub_surface(world->text_player      , screen, /*in image x */((world->active_player) %maxStates)*width, inImageY , width, height, on_screen_x, on_screen_y);
 }
 
 

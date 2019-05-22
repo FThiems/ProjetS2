@@ -15,7 +15,8 @@
 //!Sets world's parameters
 void init_parameters(world_t* world){
     world->gameover = 0; //do start the game
-    world->active_player=0; //Player 0 is starting
+    world->active_player=0; //Player 0 is starting...
+    world->playerChanged=1; //... for real
     world->main_delay = 10; //100fps
 
     //Game modifiers
@@ -27,16 +28,26 @@ void init_parameters(world_t* world){
     world->notWaiting = 0; //Do wait between shots
 }
 
+//! Places the white ball
+void init_white(world_t* world){
+    ball_t *current = get_ball(0,world);
+
+    current->x = 385;
+    current->y = 364;
+    current->vx = 0;
+    current->vy = 0;
+    current->vRemainingX = 0;
+    current->vRemainingY = 0;
+    current->fell = 0;
+}
+
 //! Places all balls at the right spot
 void init_balls(world_t* world){
     int col = 1, row, nb = 1;
     ball_t *current;
 
-    //Places the white ball
-    current = get_ball(0,world);
-    current->x = 385;
-    current->y = 364;
-    world->balls[0]->fell = 0;
+    //Place the white ball
+    init_white(world);
 
     //Places the first ball of the triangle
     *get_px(nb,world) = 775;
@@ -76,14 +87,20 @@ void init_holes(world_t* world){
 //!Loads all game images
 void init_sdl_surfaces(world_t* world){
   //Loads sprite images, they need to be freed within clean_data
+    //Modifiers
     world->table = load_image("ressources/table.bmp");
     world->balls_sprite = load_image("ressources/boules.bmp");
     world->text_ghost = load_image("ressources/Ghost.bmp");
     world->text_notBouncing = load_image("ressources/Bouncy.bmp");
     world->text_funky_overlapp = load_image("ressources/Funky.bmp");
     world->text_friction = load_image("ressources/Friction.bmp");
+
+    //Numbers
     world->text_numbers0 = load_image("ressources/numb.bmp");
     world->text_numbers1 = load_image("ressources/numb1.bmp");
+
+    //Active player
+    world->text_player = load_image("ressources/player.bmp");
 }
 
 //Initialise les scores des joueurs
@@ -108,9 +125,6 @@ void init_data(world_t* world){
     for(i = 0; i<NB_HOLES; i++){
       world->holes[i] = calloc(1, sizeof(holes_t));
     }
-
-    //Set player turn
-    world->currentPlayer = 0;
 
     //Set world's parameters
     init_parameters(world);
@@ -166,7 +180,7 @@ void scoring(world_t* world, int ball_number){
     world->pointsBuffer += ball_number;
 }
 
-//Transfere les points du buffer au joueur
+//Transfers the content of the point buffer when the turn is over
 void pointsTransfer(world_t* world){
     if((world->balls[0]->fell + world->active_player)%2)
         world->p0 += world->pointsBuffer;
@@ -183,6 +197,10 @@ void clean_data(world_t* world){
     int i;
     SDL_FreeSurface(world->table);
     SDL_FreeSurface(world->balls_sprite);
+
+    SDL_FreeSurface(world->text_numbers0);
+    SDL_FreeSurface(world->text_numbers1);
+    SDL_FreeSurface(world->text_player);
     //free du tableau des boules
     for(i = 0; i< NB_BALLS; i++){
       free(world->balls[i]);
@@ -204,6 +222,111 @@ void clean_data(world_t* world){
 
 
 ///// Movement functions //////////////////////////////////////////////////////////////
+//!Moves ball toward x,y
+void target(int x, int y, ball_t* ball){
+    //Right side
+    if (x < ball->x){
+        //Go left
+        ball->vx -= 0.1;
+    }
+    //Left side
+    if (ball->x < x){
+        //Go right
+        ball->vx += 0.1;
+    }
+
+    //Bellow
+    if (y < ball->y){
+        ball->vy -= 0.1;
+    }
+
+    //Above
+    if (ball->y < y){
+        ball->vy += 0.1;
+    }
+}
+
+//!Moves ball toward x,y
+void flee(int x, int y, ball_t* ball){
+    //Right side
+    if (x < ball->x){
+        //Go right
+        ball->vx += 0.1;
+    }
+    //Left side
+    if (ball->x < x){
+        //Go left
+        ball->vx -= 0.1;
+    }
+
+    //Bellow
+    if (y < ball->y){
+        ball->vy += 0.1;
+    }
+
+    //Above
+    if (ball->y < y){
+        ball->vy -= 0.1;
+    }
+}
+
+//Ghost tic
+void ghost_attack(world_t* world){
+    if (!world->fight)
+        return;
+
+    //fighting on
+
+    ball_t* pacman = get_ball(1, world);
+
+
+    //Blinky move toward pacman
+    target(pacman->x, pacman->y, get_ball(3,world));
+
+    //Pinky move to the front
+    target(pacman->x + pacman->vx*2 +BALL_SIZE, pacman->y + pacman->vy*2 + BALL_SIZE, get_ball(11,world));
+
+    //Inky move...
+    target(pacman->x + pacman->vx*2 +BALL_SIZE + get_ball(3,world)->x -pacman->x,
+        pacman->y + pacman->vy*2 + BALL_SIZE * get_ball(3,world)->y -pacman->y,
+        get_ball(10,world));
+
+    //Clyde
+    ball_t* Clyde = get_ball(5,world);
+    if (distance(pacman, Clyde) > BALL_SIZE*5){
+        target(pacman->x,pacman->y,Clyde);
+    }
+    else {
+        flee(pacman->x,pacman->y,Clyde);
+    }
+
+
+
+    //pacman
+    if (distance(pacman, Clyde) < 10*BALL_SIZE)
+        flee(Clyde->x,Clyde->y,pacman);
+    else{
+        target(1228/2,400,pacman);
+        target(1228/2,400,pacman);
+        target(1228/2,400,pacman);
+    }
+
+    //Screen wrap
+    if (pacman->x<BORDER_LEFT+BALL_SIZE)
+        pacman->x= BORDER_RIGHT-BALL_SIZE*2;
+    else
+        if (pacman->x>BORDER_RIGHT-BALL_SIZE)
+            pacman->x= BORDER_LEFT+BALL_SIZE*2;
+
+
+    if (pacman->y<BORDER_UP+BALL_SIZE)
+        pacman->y= BORDER_DOWN-BALL_SIZE*2;
+    else
+        if (pacman->y>BORDER_DOWN-BALL_SIZE)
+            pacman->y= BORDER_UP+BALL_SIZE*2;
+
+}
+
 //!Bounce off walls
 void wall_bounce(int ball_number, world_t* world){
     ball_t *current = get_ball(ball_number,world);
@@ -219,20 +342,29 @@ void wall_bounce(int ball_number, world_t* world){
         current->vx = fabs(current->vx);
         current->vRemainingX = fabs(current->vRemainingX);
     }
-    //Lower side + condition pour le trou du bas
-    if ((current->y > BORDER_DOWN)
-    - (current->x < LEFT || current->x > RIGHT)
-    + (current->y > BORDER_DOWN + HOLE_RADIUS))
-    {
+
+    //Lower side + mid hole
+    if ( (current->y > (BORDER_DOWN + HOLE_RADIUS)) //if way too far down
+        || //or if just too far away
+        (
+            (current->y > (BORDER_DOWN + 0))
+            && (current->x < LEFT || current->x > RIGHT) //but not in the middle
+        )
+    )
+    {   //go up
         current->vy = -1 * fabs(current->vy);
         current->vRemainingY = -1 * fabs(current->vRemainingY);
     }
-    //Upper side + condition pour le trou du haut
-    if (
-    (current->y < BORDER_UP)
-    - (current->x < LEFT || current->x > RIGHT)
-    + (current->y > BORDER_UP - HOLE_RADIUS)
-    ){
+
+    //Upper side + mid hole
+    if ( (current->y < (BORDER_UP - HOLE_RADIUS)) //if way too far up
+        || //or if just too far away
+        (
+            (current->x < LEFT || current->x > RIGHT) //but not in the middle
+            && (current->y < (BORDER_UP - 0))
+        )
+    )
+    {   //go down
         current->vy = fabs(current->vy);
         current->vRemainingY = fabs(current->vRemainingY);
     }
@@ -366,9 +498,9 @@ void friction(world_t* world){
             friction_ball( get_ball(ball_number,world) ,world);
         }
     }
-    
-    //Fallen balls friction
-    if (world->friction == 3){
+
+    //Inactive balls friction
+    if (world->friction == 3 && !world->ghost){
         for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
             if ( get_ball(ball_number,world)->fell )
                 friction_ball( get_ball(ball_number,world) ,world);
@@ -376,7 +508,20 @@ void friction(world_t* world){
     }
 }
 
+//!Everything that happens when a turn ends
+void turnOver(world_t* world){
+    //Transfer the content of the point buffer
+    pointsTransfer(world);
 
+    //If the white ball fell
+    if(get_ball(0, world)->fell && !world->ghost){
+        //Replace the white ball
+        init_white(world);
+    }
+
+    //Switch active player
+    world->active_player = (world->active_player+1)%2;
+}
 
 
 ///// Update Data //////////////////////////////////////////////////////////////
@@ -384,6 +529,7 @@ void update_data(world_t* world){
     double highest_speed = 0, calculated_speed;
     int ball_number;
     int total_baby_steps;
+    ball_t *current;
     
     //Sets all the balls' Remaining vx and vy to their vx and vy values
     for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
@@ -402,21 +548,16 @@ void update_data(world_t* world){
     //Moves ball by tiny vectors until they travelled their respective remaining vx/vy, checks bounces
     baby_loop(total_baby_steps, world);
 
-
     //Slows down
     friction(world);
 
-    //Transfere les points
-    if(!anyMoving(world)){
+    //Ghosts tic
+    ghost_attack(world);
 
-        //Transfert de points
-        pointsTransfer(world);
-
-        if(get_ball(0, world)->fell){
-             get_ball(0,world)->x = 385;
-             get_ball(0,world)->y = 364;
-        }
-        get_ball(0, world)->fell = false;
+    //If turn is over
+    if(!isTurnGoing(world) && !world->playerChanged){
+        world->playerChanged = 1;
+        turnOver(world);
     }
 
 }

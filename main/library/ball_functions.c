@@ -10,22 +10,29 @@
 #include"headers/ball_functions.h"
 
 
-//!Tells if some balls are still moving
-bool anyMoving(world_t* world){
+//!Tells if the turn isn't over
+int isTurnGoing(world_t* world){
     int ball_number; //!Current ball's index
     ball_t* current; //!Current ball's pointer
 
     if(world->notWaiting){
-        return true;
+        return 0;
     }
 
     for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
         current = get_ball(ball_number,world);
         if (current->vx>0.05 || current->vy>0.05) //if moving
-            return true;
+            return 1;
     }
 
-    return false; //none was moving
+    return 0; //none was moving
+}
+
+//!Returns the distance between A and B
+int distance(ball_t* A, ball_t* B){
+    int dist_x = A->x - B->x;
+    int dist_y = A->y - B->y;
+    return sqrt(dist_x*dist_x + dist_y*dist_y);
 }
 
 // Pointer

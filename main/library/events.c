@@ -14,14 +14,13 @@
 void mouse_input(world_t* world){
     int mouseX,mouseY;
 
-    if (!anyMoving(world) || world->notWaiting){ //If still or the notWaiting flag is on
+    if (!isTurnGoing(world) || world->notWaiting){ //If still or the notWaiting flag is on
         SDL_GetMouseState(&mouseX,&mouseY);
         //Give the white ball a speed
         world->balls[0]->vx = (mouseX - world->balls[0]->x) *SPEED_COEF;
         world->balls[0]->vy = (mouseY - world->balls[0]->y) *SPEED_COEF;
-        printf("active : %i\n",world->active_player);
-        world->active_player = (world->active_player+1)%2; //Switch player
-        printf("%d et %d buffer = %d \n", world->p0, world->p1, world->pointsBuffer);
+        //A new turn starts
+        world->playerChanged = 0;
     }
 }
 
@@ -57,9 +56,14 @@ void handle_events(SDL_Event* event,world_t* world){
             world->funky_overlapp = (world->funky_overlapp +1)%2; // Attempts to mimic the "funky" overlapping code */
         //friction
         if( keystates[ SDLK_r ]  )
-            world->friction = (world->friction +1)%4;              // Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
+            world->friction = (world->friction +1)%4;              // Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for none */
 
         world->notWaiting = world->friction;
+
+        //fight
+        if( keystates[ SDLK_t ]  )
+            world->fight = (world->fight +1)%2;              // Send the ghosts after get_ball(1, world) */
+
 
     }
 

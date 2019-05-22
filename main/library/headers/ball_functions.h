@@ -18,11 +18,11 @@
 
 ///// Signatures //////////////////////////////////////////////////////////////
 /**
- * \brief Tells if some balls are still moving
+ * \brief Tells if the turn isn't over
  * \param world Data bundling all persistent game infos
  */
 
-bool anyMoving(world_t* world);
+int isTurnOver(world_t* world);
 
 //! returns a pointer to ball_number
 ball_t* get_ball(int ball_number,world_t* world);

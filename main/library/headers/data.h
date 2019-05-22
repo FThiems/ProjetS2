@@ -94,7 +94,7 @@ void all_holes(world_t* world);
 void scoring(world_t* world, int ball_number);
 
 /**
- * \brief Transfers the content of the point buffer when the turn is over
+ * \brief Transfers the content of the point buffer
  * \param world Data bundling all persistent game infos
  */
 
@@ -112,6 +112,18 @@ void clean_data(world_t* world);
 
 
 ///// Movement functions ////////////////////////////////////////////////
+/**
+ * \brief Moves ball toward x,y
+ * \param current Pointer of the working ball
+ */
+void target(int x, int y, ball_t* ball);
+
+/**
+ * \brief Moves ball toward x,y
+ * \param current Pointer of the working ball
+ */
+void flee(int x, int y, ball_t* ball);
+
 /**
  * \brief Bounce off walls
  * \param ball_number Index of the working ball
@@ -136,7 +148,7 @@ void baby_loop(int remaining_baby_steps, world_t* world);
 
 /**
  * \brief Slows ball by world->friction_multiplier
- * \param ball_number Pointer of the working ball
+ * \param current Pointer of the working ball
  * \param world Data bundling all persistent game infos
  */
 void friction_ball(ball_t* current,world_t* world);
@@ -147,6 +159,11 @@ void friction_ball(ball_t* current,world_t* world);
  */
 void friction(world_t* world);
 
+/**
+ * \brief Everything that happens when a turn ends
+ * \param world Data bundling all persistent game infos
+ */
+void turnOver(world_t* world);
 
 
 ///// Update Data ////////////////////////////////////////////////
