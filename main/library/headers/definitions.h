@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
-
+#include <time.h>
 
 
 
@@ -101,6 +101,7 @@ struct world_s{
         //Data
         ball_t** balls;              /*!< Balls pointer array */
         holes_t** holes;             /*!< Holes pointer array */
+        int bottom_ball;                /*!< First ball to be displayed */
         //Changeable physics values
         double friction_multiplier;     /*!< Amount by which a balls speed should be multiplied each tic, if subjected to friction */
         int main_delay;              /*!< Delay between two executions of the main loop */
@@ -129,8 +130,11 @@ struct world_s{
         int notBouncing;                /*!< Tells if balls should bounce each other */
         int funky_overlapp;          /*!< Attempts to mimic the "funky" overlapping code */
         int friction;                /*!< Tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
-        int notWaiting;                   /*!< Tells if players should wait between two shot */
+        int notWaiting;              /*!< Tells if players should wait between two shot */
         int fight;                  /*!< Send the ghosts after get_ball(1, world) */
+        int screen_wrap;            /*!< Tells if balls should hit the walls (0) or teleport on the other side (1)*/
+        int black_holes;            /*!< Balls fall into the holes from further away */
+        int exchange;               /*!< Tells if balls should swap positions on hit 0 no, 1 yes, 2 at random*/
 
         //Images
         SDL_Surface* text_ghost;   /*!< SDL Surface of the ghost text */

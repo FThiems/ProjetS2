@@ -4,25 +4,10 @@
  */
 
 
-/**
- * \brief Constants, structures and includes
- */
-#include "library/headers/definitions.h"
 
-/**
- *\brief World editing functions
- */
-#include "library/headers/data.h"
-
-/**
- * \brief Display functions
- */
-#include "library/headers/graphics.h"
-
-/**
- * \brief Player input event handling
- */
-#include "library/headers/events.h"
+#include "library/headers/data.h" //World editing functions
+#include "library/headers/graphics.h" //Display functions
+#include "library/headers/events.h" //Player input event handling
 
 
 

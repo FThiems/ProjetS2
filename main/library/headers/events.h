@@ -8,15 +8,7 @@
 #define EVENTSFLAG
 
 ///// Imports //////////////////////////////////////////////////////////////
-/**
- * \brief Constants, structures and includes
- */
-#include "definitions.h"
-
-/**
- * \brief Ball pointer retrieving functions
- */
-#include "ball_functions.h"
+#include "initialisation.h" //Imports and function headers for this file
 
 
 
@@ -28,6 +20,13 @@
  * \param world Data bundling all persistent game infos
  */
 void mouse_input(world_t* world);
+
+/**
+ * \brief Handles keyboard input
+ * \param keystates SDL keystates
+ * \param world Data bundling all persistent game infos
+ */
+void keyboard_input(Uint8* keystates, world_t* world);
 
 /**
  * \brief Function called each tic to process player inputs

@@ -1,5 +1,5 @@
-SRC=main.c $(LIB)sdl-light.c $(LIB)ball_functions.o $(LIB)data.o $(LIB)events.o $(LIB)graphics.o $(LIB)collision.o
-HEADERS=$(LIBH)sdl-light.h $(LIBH)graphics.h $(LIBH)events.h $(LIBH)data.h $(LIBH)definitions.h $(LIBH)collision.h
+SRC=main.c $(LIB)sdl-light.c $(LIB)ball_functions.o $(LIB)data.o $(LIB)events.o $(LIB)graphics.o $(LIB)collision.o $(LIB)initialisation.o
+HEADERS=$(LIBH)sdl-light.h $(LIBH)graphics.h $(LIBH)events.h $(LIBH)data.h $(LIBH)definitions.h $(LIBH)collision.h $(LIBH)initialisation.h
 BIN=billard
 LIBS=-L/usr/lib/x86_64-linux-gnu -lsndfile -lm
 
@@ -27,10 +27,13 @@ Main_c=gcc -Wall -g $(SRC) -lm `sdl-config --cflags --libs` -o $(BIN)
 ball_functions.o:  $(LIB)ball_functions.c  $(LIBH)ball_functions.h   $(DEFH)
 	$(COMPILE)    -c ball_functions.c      -o ball_functions.o
 
-data.o:            $(LIB)data.c            $(LIBH)data.h             $(DEFH)  $(BALLF)  collision.o
+initialisation.o:  $(LIB)initialisation.c            $(LIBH)initialisation.h             $(DEFH)  $(BALLF)
+	$(COMPILE)    -c initialisation.c                -o initialisation.o
+
+data.o:            $(LIB)data.c            $(LIBH)data.h             initialisation.o  collision.o
 	$(COMPILE)    -c data.c                -o data.o
 
-events.o:          $(LIB)events.c          $(LIBH)events.h           $(DEFH)  $(BALLF)
+events.o:          $(LIB)events.c          $(LIBH)events.h           initialisation.o
 	$(COMPILE)    -c events.c              -o events.o
 
 graphics.o:        $(LIB)graphics.c        $(LIBH)graphics.h         $(DEFH)  $(BALLF)
@@ -66,6 +69,8 @@ kate:
 ############################## Debug
 force:
 	$(Clean_all);make
+noSDLCheck: $(SRC) $(HEADERS)
+	$(Main_c)
 
 CHECK_SDL=./Check_sdl.sh
 Check=$(CHECK_SDL)

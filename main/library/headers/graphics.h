@@ -8,15 +8,7 @@
 #define GRAPHICSFLAG
 
 ///// Imports //////////////////////////////////////////////////////////////
-/**
- * \brief Constants, structures and includes
- */
-#include "definitions.h"
-
-/**
- * \brief Ball pointer retrieving functions
- */
-#include "ball_functions.h"
+#include "ball_functions.h" //Ball handling functions
 
 
 

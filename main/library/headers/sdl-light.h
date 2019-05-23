@@ -1,3 +1,8 @@
+/**
+ * \file sdl-light.h
+ * \brief sur-couche de SDL pour simplifier son utilisation pour le projet 
+ */
+
 #ifndef __SDL_LIGHT_H__
 #define __SDL_LIGHT_H__
 

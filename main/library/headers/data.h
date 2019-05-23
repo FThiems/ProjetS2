@@ -8,57 +8,17 @@
 #define DATA
 
 ///// Imports //////////////////////////////////////////////////////////////
-/**
- * \brief Constants, structures and includes
- */
-#include "definitions.h"
-
-/**
- * \brief Ball pointer retrieving functions
- */
-#include "ball_functions.h"
-
-/**
- * \brief Signatures des fonctions de gestion des collisions
- */
-#include "collision.h"
-
+#include "collision.h" //Fonctions de gestion des collisions
+#include "initialisation.h" //Imports and function headers for this file
 
 
 
 ///// Signatures //////////////////////////////////////////////////////////////
-///// Initialisations ////////////////////////////////////////////////
-/**
- * \brief Sets world's parameters
- * \param world Data bundling all persistent game infos
- */
-void init_parameters(world_t* world);
-
-/**
- * \brief Places all balls at the right spot
- * \param world Data bundling all persistent game infos
- */
-void init_balls(world_t* world);
-
-/**
- * \brief Places holes
- * \param world Data bundling all persistent game infos
- */
-void init_holes(world_t* world);
-
-/**
- * \brief Places holes
- * \param world Data bundling all persistent game infos
- */
-void init_sdl_surfaces(world_t* world);
-
 /**
  * \brief Places holes
  * \param world Data bundling all persistent game infos
  */
 void init_data(world_t* world);
-
-
 
 
 ///// Hole functions ////////////////////////////////////////////////
@@ -113,16 +73,10 @@ void clean_data(world_t* world);
 
 ///// Movement functions ////////////////////////////////////////////////
 /**
- * \brief Moves ball toward x,y
- * \param current Pointer of the working ball
+ * \brief Ghost tic
+ * \param world Data bundling all persistent game infos
  */
-void target(int x, int y, ball_t* ball);
-
-/**
- * \brief Moves ball toward x,y
- * \param current Pointer of the working ball
- */
-void flee(int x, int y, ball_t* ball);
+void ghost_attack(world_t* world);
 
 /**
  * \brief Bounce off walls
@@ -130,6 +84,13 @@ void flee(int x, int y, ball_t* ball);
  * \param world Data bundling all persistent game infos
  */
 void wall_bounce(int ball_number, world_t* world);
+
+/**
+ * \brief Screen wrap
+ * \param ball_number Index of the working ball
+ * \param world Data bundling all persistent game infos
+ */
+void screen_wrap(int ball_number, world_t* world);
 
 /**
  * \brief Bounce off other balls
