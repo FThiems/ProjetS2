@@ -175,6 +175,8 @@ void all_holes(world_t* world){
   }
 }
 
+
+///// Points Functions ////////////////////////////////////////////////////////////
 //Adds the fallen ball's points to the turn point buffer
 void scoring(world_t* world, int ball_number){
     world->pointsBuffer += ball_number;
@@ -211,7 +213,7 @@ void clean_data(world_t* world){
       free(world->holes[i]);
     }
     free(world->holes);
-    
+
     SDL_FreeSurface(world->text_notBouncing);
     SDL_FreeSurface(world->text_friction);
     SDL_FreeSurface(world->text_ghost);
@@ -330,8 +332,8 @@ void ghost_attack(world_t* world){
 //!Bounce off walls
 void wall_bounce(int ball_number, world_t* world){
     ball_t *current = get_ball(ball_number,world);
-    
-    
+
+
     //Right side
     if (current->x > BORDER_RIGHT){
         current->vx = -1 * fabs(current->vx);
@@ -375,8 +377,8 @@ void ball_bounce(int ball_number, int watched_ball_number, world_t* world){
     double distance_x, distance_y, distance_xy;
     double overlapped_x, overlapped_y;
     ball_t *current,*watched;
-    
-    
+
+
     //Get ball's pointers
     current = get_ball(ball_number,world);
     watched = get_ball(watched_ball_number,world);
@@ -385,7 +387,7 @@ void ball_bounce(int ball_number, int watched_ball_number, world_t* world){
     distance_x = current->x - watched->x;
     distance_y = current->y - watched->y;
     distance_xy = sqrt(distance_x * distance_x + distance_y * distance_y);
-    
+
     //Check collision
     if (distance_xy < BALL_SIZE){
         //Funky_overlapp modifier activated?
@@ -394,12 +396,12 @@ void ball_bounce(int ball_number, int watched_ball_number, world_t* world){
                 //Calculates wanted separating vector between the two balls
                 overlapped_x = distance_x / distance_xy * BALL_SIZE;
                 overlapped_y = distance_y / distance_xy * BALL_SIZE;
-                
-                
+
+
                 //Move backward
                 current->x +=  overlapped_x-distance_x;
                 current->y +=  overlapped_y-distance_y;
-                
+
                 //Re-add the distance to the remaining vector
                 current->vRemainingX -= overlapped_x-distance_x;
                 current->vRemainingY -= overlapped_y-distance_y;
@@ -407,21 +409,21 @@ void ball_bounce(int ball_number, int watched_ball_number, world_t* world){
         else { //Funky_overlapp modifier activated
             overlapped_x = distance_x / distance_xy;
             overlapped_y = distance_y / distance_xy;
-            
+
             current->x -= overlapped_x;
             current->vRemainingX += overlapped_x;
-            
+
             current->y -= overlapped_y;
             current->vRemainingY += overlapped_y;
-            
+
         }
-        
+
         //Actual ball bouncing
         if (!world->notBouncing){
             collision(current->x,current->y,&(current->vx),&(current->vy),watched->x,watched->y,&(watched->vx),&(watched->vy));
             collision(current->x,current->y,&(current->vRemainingX),&(current->vRemainingY),watched->x,watched->y,&(watched->vRemainingX),&(watched->vRemainingY));
         }
-        
+
     }
 }
 
@@ -429,7 +431,7 @@ void ball_bounce(int ball_number, int watched_ball_number, world_t* world){
 void baby_loop(int remaining_baby_steps, world_t* world){
     ball_t *current,*watched;
     int ball_number, watched_ball_number;
-    
+
     //Small movements loop
     while (remaining_baby_steps >1){
         remaining_baby_steps--;
@@ -442,7 +444,7 @@ void baby_loop(int remaining_baby_steps, world_t* world){
             //Moves balls[ball_number] by it's vectors
             current->x += current->vRemainingX / remaining_baby_steps;
             current->y += current->vRemainingY / remaining_baby_steps;
-            
+
             //Removes moved distance
             current->vRemainingX -= current->vRemainingX / remaining_baby_steps;
             current->vRemainingY -= current->vRemainingY / remaining_baby_steps;
@@ -453,7 +455,7 @@ void baby_loop(int remaining_baby_steps, world_t* world){
             //Bounce off other balls
             for (watched_ball_number = 0; watched_ball_number < NB_BALLS; watched_ball_number++){
                 watched = get_ball(watched_ball_number,world);
-                
+
                 if (watched_ball_number!=ball_number) //no self-colisions
                     if ((!watched->fell && !current->fell) || world->ghost==1 || world->ghost==3) //if not an fallen ball, or if ghost mode is on
                         ball_bounce( ball_number, watched_ball_number, world);
@@ -465,13 +467,13 @@ void baby_loop(int remaining_baby_steps, world_t* world){
     }
     //fin while
 }
-  
+
 //!Slows ball by world->friction_multiplier
 void friction_ball(ball_t* current,world_t* world){
     //multiplication
     current->vx *= world->friction_multiplier;
     current->vy *= world->friction_multiplier;
-        
+
     //Set to 0 if really small, to fasten up immobilisation
     if( fabs(current->vx)  <0.01)
         current->vx =0;
@@ -482,16 +484,16 @@ void friction_ball(ball_t* current,world_t* world){
 //!Slows the right balls by world->friction_multiplier
 void friction(world_t* world){
     // world->friction tells which balls should slow down, 0 for all, 1 for white only, 2 for colored only, 3 for fallen only */
-    
+
     //Variables
     int ball_number; //Index of the current ball worked on
-    
+
 
     //White ball friction
     if (world->friction == 0 || world->friction == 1)
         friction_ball(get_ball(0,world) ,world);
-    
-    
+
+
     //Colored balls friction
     if (world->friction == 0 || world->friction == 2){
         for (ball_number = 1; ball_number < NB_BALLS; ball_number++){
@@ -530,7 +532,7 @@ void update_data(world_t* world){
     int ball_number;
     int total_baby_steps;
     ball_t *current;
-    
+
     //Sets all the balls' Remaining vx and vy to their vx and vy values
     for (ball_number = 0; ball_number < NB_BALLS; ball_number++){
         *get_p_Remaining_vx(ball_number,world) = *get_pvx(ball_number,world);
@@ -544,7 +546,7 @@ void update_data(world_t* world){
     //Every step needs to be the same for a ball, and smaller than (BALL_SIZE/2) (radius)
     total_baby_steps = (int) highest_speed % (BALL_SIZE/2) +2;
 
-    
+
     //Moves ball by tiny vectors until they travelled their respective remaining vx/vy, checks bounces
     baby_loop(total_baby_steps, world);
 
@@ -561,14 +563,3 @@ void update_data(world_t* world){
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -22,10 +22,13 @@
  * \param world Data bundling all persistent game infos
  */
 
-int isTurnOver(world_t* world);
+int isTurnGoing(world_t* world);
 
 //! returns a pointer to ball_number
 ball_t* get_ball(int ball_number,world_t* world);
+
+//renvoie la distance entre 2 balles
+int distance(ball_t* A, ball_t* B)
 
 
 // Positions

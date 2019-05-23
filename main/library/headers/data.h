@@ -35,6 +35,12 @@
 void init_parameters(world_t* world);
 
 /**
+ * \brief Places the white ball
+ * \param world Data bundling all persistent game infos
+ */
+void init_white(world_t* world);
+
+/**
  * \brief Places all balls at the right spot
  * \param world Data bundling all persistent game infos
  */
@@ -45,6 +51,12 @@ void init_balls(world_t* world);
  * \param world Data bundling all persistent game infos
  */
 void init_holes(world_t* world);
+
+/**
+ * \brief Initialise le score des joueurs à 0
+ * \param world Data bundling all persistent game infos
+ */
+void init_score(world_t* world);
 
 /**
  * \brief Places holes
@@ -86,6 +98,7 @@ bool is_falling(world_t* world, int ball_number, int hole_number);
  */
 void all_holes(world_t* world);
 
+///// Points Functions //////////////////////////////////////////////
 /**
  * \brief Adds the fallen ball's points to the turn point buffer
  * \param world Data bundling all persistent game infos
@@ -123,6 +136,12 @@ void target(int x, int y, ball_t* ball);
  * \param current Pointer of the working ball
  */
 void flee(int x, int y, ball_t* ball);
+
+/**
+ * \brief Fonction qui gère le mode pacman
+ * \param world Data bundling all persistent game infos
+ */
+void ghost_attack(world_t* world);
 
 /**
  * \brief Bounce off walls
