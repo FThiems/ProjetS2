@@ -1,6 +1,6 @@
 /**
  * \file main.c 
-* \brief Billard
+ * \brief Billard
  */
 
 
